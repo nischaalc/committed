@@ -48,10 +48,6 @@ body {
 	font-size: 4em;
 }
 
-#description {
-	margin-top: -3em;
-}
-
 input, input:focus {
 	border: none;
 	outline: none;
