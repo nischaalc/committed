@@ -1,0 +1,81 @@
+body {
+	font-size: 16px;
+	text-align: center;
+	font-family: 'Lato', sans-serif;
+}
+
+#container {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	  align-items: center;
+	-webkit-box-pack: center;
+	-moz-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	  justify-content: center;
+}
+
+#data-entry {
+	margin-top: 2em;
+	font-family: 'Inconsolata';
+	width: 50%;
+	height: auto;
+	text-align: left;
+	display: block;
+	color: rgb(255,255,255);
+	background-color: rgb(0,0,0);
+	padding: 1em;
+	border-radius: 15px;
+	border-top: 30px solid #C4C4C4;
+}
+
+#addy {
+	color: green;
+}
+
+#title {
+	font-size: 4em;
+}
+
+#description {
+	margin-top: -3em;
+}
+
+input, input:focus {
+	border: none;
+	outline: none;
+	background-color: rgb(0,0,0);
+	color: rgb(255, 255, 255);
+}
+
+input {
+	-webkit-animation: blink-empty 1s infinite;
+	-moz-animation: blink-empty 1s infinite;
+	-ms-animation: blink-empty 1s infinite;
+	-o-animation: blink-empty 1s infinite;
+	border-left: transparent solid 1px;
+	margin:5px 
+}
+
+@-webkit-keyframes blink-empty {
+	50% {border-left: 1px solid #333;}
+}
+
+@-moz-keyframes blink-empty {
+	50% {border-left: 1px solid #333;}
+}
+
+@-ms-keyframes blink-empty {
+	50% {border-left: 1px solid #333;}
+}
+
+@-o-keyframes blink-empty {
+	50% {border-left: 1px solid #333;}
+}
