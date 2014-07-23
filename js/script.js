@@ -25,7 +25,9 @@ $('#username').keyup(function (e) {
 function getUser(userName) {
 	$.get(base + userName, function (userData) {
 		uData = userData;
-		$('#uname').append('<p>'+uData.name+'</p>');
+		$('#content').append('<p id = "uname">'+uData.name+'</p>');
+		$('#content').append('<p id = "lastup">'+(uData.updated_at).substring(0,10)+'</p>');
+		$('#content').append('<p id = "membersince">'+(uData.created_at).substring(0,10)+'</p>');
 	});
 	getRepos(userName);
 }
@@ -38,7 +40,7 @@ function getRepos(user) {
 			rCount++;
 			//$('#repos').append('<p>'+rData[repo].name+'</p>');
 		}
-		$('#repos').append('<p>'+rCount+'</p>');
+		$('#content').append('<p id = "repos">'+rCount+'</p>');
 	});
 }
 
@@ -47,7 +49,7 @@ function showHelp() {
 	$('#messages').append('<p class = "help">$ '+help+'</p>');
 	setTimeout(function() {
         $("#messages").fadeOut("slow", function() {
-            $("messages").remove();
+            $("#messages").remove();
         });
     }, 5000);
 }
@@ -57,7 +59,7 @@ function unrecognized() {
 	$('#messages').append('<p class = "error">'+error+'</p>');
 	setTimeout(function() {
         $("#messages").fadeOut("slow", function() {
-            $("messages").remove();
+            $("#messages").remove();
         });
     }, 5000);
 }
