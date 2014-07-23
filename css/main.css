@@ -36,6 +36,10 @@ body {
 	border-top: 30px solid #C4C4C4;
 }
 
+#data-entry span {
+	position: relative;
+}
+
 #addy {
 	color: green;
 }
@@ -61,21 +65,31 @@ input {
 	-ms-animation: blink-empty 1s infinite;
 	-o-animation: blink-empty 1s infinite;
 	border-left: transparent solid 1px;
-	margin:5px 
+	margin:5px;
+	font-family: 'Inconsolata';
+	font-size: 1em;
 }
 
 @-webkit-keyframes blink-empty {
-	50% {border-left: 1px solid #333;}
+	50% {border-left: 1px solid #FFF;}
 }
 
 @-moz-keyframes blink-empty {
-	50% {border-left: 1px solid #333;}
+	50% {border-left: 1px solid #FFF;}
 }
 
 @-ms-keyframes blink-empty {
-	50% {border-left: 1px solid #333;}
+	50% {border-left: 1px solid #FFF;}
 }
 
 @-o-keyframes blink-empty {
-	50% {border-left: 1px solid #333;}
+	50% {border-left: 1px solid #FFF;}
+}
+
+.error {
+	color: #FF2929;
+}
+
+.help {
+	color: #3EF763;
 }
