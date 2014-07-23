@@ -20,18 +20,22 @@
 	
 	<div id = "intro">
 		<p id = "title">Committed</p>
-		<p id = "description">A comprehensive GitHub profile summary on a single page</p>
+		<p id = "description">A comprehensive GitHub profile summary</p>
 	</div>
 	
 	<div id = "container">
 		<div id = "data-entry">
 			<span>Welcome to Git (version 2.0.2)</span></br></br>
 			<span>Run 'git help git' to display the help index</span></br>
-			<span>Run 'GIT_COMMITTER_NAME=<em>username</em>' to get information</span></br></br>
+			<span>Run <em>username</em> to get information</span></br></br>
 			<span id = "addy">Committed@COMMITTED-WEB ~</span></br>
-			<span>$ </span><input type = "text" id = "username" autocomplete="off">
+			<span>$ </span><input type = "text" id = "username" autocomplete="off" size = 50></br>
+			<div id = "messages"></div>
 		</div>
 	</div>
+	
+	<span id = "uname"></span>
+	<span id = "repos"></span>
 	
 	<script src="js/jquery.js"></script>
 	<script src="js/script.js"></script>
