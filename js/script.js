@@ -36,9 +36,11 @@ function getUser(userName) {
 		$('#search').fadeOut(750, function () {
 			$('#data').fadeIn(500);
 		});
-		//$('#content').append('<img src = "images/search_blk.png" id = "go-back"/>');
-		$('#content').append('<span  id = "uname">'+uData.name+'</span>');
-		$('#content').append('<span p id = "membersince"> member since '+(uData.created_at).substring(0,10)+'</span>');
+		$('#top-bar').append('<span  id = "uname" style = "margin-left: 0.3em;">'+uData.name+'</span>');
+		$('#top-bar').append('<span p id = "membersince" style = "margin-left: 1em;"> committing since '+(uData.created_at).substring(0,10)+'</span>');
+		
+		$("#home").wrap('<a href="'+uData.blog+'"></a>');
+		$("#code").wrap('<a href="'+uData.html_url+'"></a>');
 	});
 	getRepos(userName);
 }
