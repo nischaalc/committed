@@ -116,6 +116,10 @@ body {
 	color: #1EDEF7;
 }
 
+.oops {
+	color: #F5FC26;
+}
+
 #uname {
 	font-size: 3em;
 	text-align: left;
