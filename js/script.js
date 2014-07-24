@@ -56,7 +56,6 @@ function getOrgs(username) {
 	var oData = {};
 	$.get(base + username+'/orgs', function (orgData) {
 		oData = orgData;
-		alert(oData);
 		for (var orgs in oData) {
 			orgCount++;
 		}
