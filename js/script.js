@@ -36,31 +36,43 @@ function getUser(userName) {
 		$('#search').fadeOut(750, function () {
 			$('#data').fadeIn(500);
 		});
-		$('#top-bar').append('<span  id = "uname" style = "margin-left: 0.3em;">'+uData.name+'</span>');
-		$('#top-bar').append('<span p id = "membersince" style = "margin-left: 1em;"> committing since '+(uData.created_at).substring(0,10)+'</span>');
+		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uData.name+'</span>');
+		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> committing since '+(uData.created_at).substring(0,10)+'</span>');
 		
 		$("#home").wrap('<a href="'+uData.blog+'"></a>');
 		$("#code").wrap('<a href="'+uData.html_url+'"></a>');
+		$('#content').append('<span class = "stat">'+uData.public_repos+'</span><span class = "desc"> public repositories.</span>');
+		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.followers+'</span><span class = "desc"> followers.</span>');
+		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span>');
+		$('#content').append('<span class = "desc" style = "padding-left: 0.3em;">Works at </span><span class = "stat">'+uData.company+'</span><span class = "desc">.</span>');
 	});
+	getOrgs(userName);
 	getRepos(userName);
+}
+
+//Get users' organization info using GitHub API
+function getOrgs(username) {
+	var orgCount = 0;
+	var oData = {};
+	$.get(base + username+'/orgs', function (orgData) {
+		oData = orgData;
+		alert(oData);
+		for (var orgs in oData) {
+			orgCount++;
+		}
+	});
 }
 
 //Get users' repo data using GitHub API
 function getRepos(user) {
-	var rCount = 0;
 	$.get(base + user + '/repos', function (repoData) {
 		rData = repoData;
-		for (var repo in rData) {
-			rCount++;
-			//$('#repos').append('<p>'+rData[repo].name+'</p>');
-		}
-		//$('#content').append('<p id = "repos">'+rCount+'</p>');
 	});
 }
 
 //Help message
 function showHelp() {
-	var help = 'Enter the username of the GitHub member you are looking for.</br>Search filters coming soon.';	
+	var help = 'Enter the username of the GitHub member you are looking for.';
 	$('#messages').append('<p class = "help">'+help+'</p>');
 	$('#messages').show();
 	setTimeout(function() {
