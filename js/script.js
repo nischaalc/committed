@@ -21,7 +21,6 @@ $('#username').keyup(function (e) {
 		else {
 			if (enteredText == 'git help git') showHelp();
 			else { 
-				$('#search').hide();
 				$('.spinner').show();
 				getUser(enteredText);
 			}
@@ -34,7 +33,7 @@ $('#username').keyup(function (e) {
 function getUser(userName) {
 	$.get(base + userName, function (userData) {
 		uData = userData;
-		$('.spinner').fadeOut(750, function () {
+		$('#search').fadeOut(750, function () {
 			$('#data').fadeIn(500);
 		});
 		//$('#content').append('<img src = "images/search_blk.png" id = "go-back"/>');
@@ -59,11 +58,12 @@ function getRepos(user) {
 
 //Help message
 function showHelp() {
-	var help = 'Enter the username of the GitHub member for whose data you are looking for. Search filters coming soon.';	
+	var help = 'Enter the username of the GitHub member you are looking for.</br>Search filters coming soon.';	
 	$('#messages').append('<p class = "help">'+help+'</p>');
+	$('#messages').show();
 	setTimeout(function() {
         $("#messages").fadeOut("slow", function() {
-            $("#messages").remove();
+            $("#messages").hide();
         });
     }, 5000);
 }
@@ -72,17 +72,19 @@ function showHelp() {
 function unrecognized() {
 	var error = 'That user could not be found! Try again!';
 	$('#messages').append('<p class = "error">'+error+'</p>');
+	$('#messages').show();
 	setTimeout(function() {
         $("#messages").fadeOut("slow", function() {
-            $("#messages").remove();
+            $("#messages").hide();
         });
     }, 5000);
 }
 
 // Take user back to search screen
 $( '#go-back' ).click(function() {
-		$('#data').fadeOut(750, function () {
+		$('#data').fadeOut(500, function () {
 			$('#search').fadeIn(500);
+			$('.spinner').hide();
 			$('#username').focus();
 		});
 });
