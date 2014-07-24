@@ -1,6 +1,7 @@
 body {
 	font-size: 16px;
 	text-align: center;
+	margin: 0;
 	font-family: 'Lato', sans-serif;
 }
 
@@ -87,14 +88,26 @@ input {
 	50% {border-left: 1px solid #FFF;}
 }
 
-#go-back {
+#images {
 	float: right;
+}
+
+#go-back {
 	margin-right: 1em;
 	margin-top: 1em;
 }
 
 #go-back:hover {
 	cursor: pointer;
+}
+
+#top-bar {
+	text-align: left;
+	height: 4em;
+	width: 100%;
+	background-color: #1595BF;
+	color: #9DDFF5;
+	font-family: 'Oswald', sans-serif; 
 }
 
 /* ----------------------- */
@@ -113,8 +126,7 @@ input {
 }
 
 #uname {
-	font-size: 4em;
-	font-family: 'PT Sans', sans-serif;
+	font-size: 3em;
 	text-align: left;
 }
 
