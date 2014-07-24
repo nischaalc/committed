@@ -54,28 +54,13 @@ body {
 
 #title {
 	font-size: 4em;
-	padding-top: 10%;
+	padding-top: 8%;
 	font-family: 'Lobster Two', cursive;
 }
 
-#footer{
-	display: block;
-	text-align: center;
-	font-size: 0.8em;
-	bottom: 0;
-	width: 100%;
-	height: 1.3em;
-	color: rgb(154, 154, 154);
-	position: fixed;
-}
-
-#footer a {
-	text-decoration: underline;
-	color: rgb(180, 180, 180);
-}
-
-#footer a:hover {
-	color: rgb(150, 150, 150);
+#lang-chart {
+	float: left;
+	margin-top: 1em;
 }
 
 /* ----------------------- */
@@ -124,6 +109,11 @@ body {
 
 .help {
 	color: #3EF763;
+}
+
+.info,
+.info a {
+	color: #1EDEF7;
 }
 
 #uname {
