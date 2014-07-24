@@ -11,29 +11,43 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=1'>
 	
 	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-	<link href='https://fonts.googleapis.com/css?family=Inconsolata|Lato' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Inconsolata|Lato|PT+Sans' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/main.css">
 	
 </head>
 
 <body>
 	
-	<div id = "intro">
-		<p id = "title">Committed</p>
-	</div>
-	
-	<div id = "container">
-		<div id = "data-entry">
-			<span>Welcome to Git (version 2.0.2)</span></br></br>
-			<span>Run 'git help git' to display the help index</span></br>
-			<span>Run <em>username</em> to get information</span></br></br>
-			<span id = "addy">Committed@COMMITTED-WEB ~</span></br>
-			<span>$ </span><input type = "text" id = "username" autocomplete="off" size = 20></br>
-			<div id = "messages"></div>
+	<div id = "search">
+		<div id = "intro">
+			<p id = "title">Committed</p>
+		</div>
+			
+		<div id = "container">
+			<div id = "data-entry">
+				<span>Welcome to Git (version 2.0.2)</span></br></br>
+				<span>Run 'git help git' to display the help index</span></br>
+				<span>Run <em>username</em> to get information</span></br></br>
+				<span id = "addy">Committed@COMMITTED-WEB ~</span></br>
+				<span>$ </span><input type = "text" id = "username" autocomplete="off" size = 20/></br>
+				<div id = "messages"></div>
+			</div>
 		</div>
 	</div>
 	
-	<div id = "content"></div>
+	<div class="spinner">
+		<div class="rect1"></div>
+		<div class="rect2"></div>
+		<div class="rect3"></div>
+		<div class="rect4"></div>
+		<div class="rect5"></div>
+	</div>
+	
+	<div id = "data">
+		<div id = "top-bar"></div>
+		<img src = "images/search_blk.png" id = "go-back"/>
+		<div id = "content"></div>
+	</div>
 	
 	<script src="js/jquery.js"></script>
 	<script src="js/script.js"></script>
