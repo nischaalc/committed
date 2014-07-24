@@ -47,11 +47,12 @@ function getUser(userName) {
 		$('#content').append('<span class = "stat">'+uData.public_repos+'</span><span class = "desc"> public repositories,</span>');
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.followers+'</span><span class = "desc"> followers and</span>');
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span></br>');
-		$('#content').append('<span class = "desc">They now work at </span><span class = "stat">'+uData.company+'</span><span class = "desc">.</span>');
+		$('#content').append('<span class = "desc">'+((uData.name).split(" "))[0]+' currently works at </span><span class = "stat">'+uData.company+'</span>');
+        $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uData.location+'</span><span class = "desc">.</span>');
 	});
-	getOrgs(userName);
+	//getOrgs(userName);
+    getLang(userName);
 	getRepos(userName);
-	getLang(userName);
 }
 
 //Get users' organization info using GitHub API
@@ -70,6 +71,9 @@ function getOrgs(username) {
 function getRepos(user) {
 	$.get(base + user + '/repos', function (repoData) {
 		rData = repoData;
+        $('#reposlangs').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody>');
+        $('#reposlangs').append('<tr><td>Test</td><td>Test</td><td>Test</td></tr>');
+        $('#reposlangs').append('</tbody></table>');
 	});
 }
 
@@ -81,7 +85,12 @@ function getLang(user) {
 			value: 300,
 			color:"#F7464A",
 			label: "Red"
-		}
+		},
+        {
+            value: 300,
+            color: "#5d53d8",
+            label: "Blue"
+        }
 	]
 	new Chart(ctx).Doughnut(data, {animateScale: true});
 }
