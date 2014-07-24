@@ -21,6 +21,7 @@ $('#username').keyup(function (e) {
 		else {
 			if (enteredText == 'git help git') showHelp();
 			else if (enteredText == 'git info') showInfo();
+			else if (enteredText == 'username') showOops();
 			else { 
 				$('.spinner').show();
 				getUser(enteredText);
@@ -40,12 +41,13 @@ function getUser(userName) {
 		});
 		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uData.name+'</span>');
 		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> has been committing since '+(uData.created_at).substring(0,10)+'</span>');
-		$("#home").wrap('<a href="'+uData.blog+'"></a>');
-		$("#code").wrap('<a href="'+uData.html_url+'"></a>');
-		$('#content').append('<span class = "stat">'+uData.public_repos+'</span><span class = "desc"> public repositories.</span>');
-		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.followers+'</span><span class = "desc"> followers.</span>');
-		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span>');
-		$('#content').append('<span class = "desc" style = "padding-left: 0.3em;">Works at </span><span class = "stat">'+uData.company+'</span><span class = "desc">.</span>');
+		$("#home").wrap('<a href="'+uData.blog+'" target="_blank"></a>');
+		$("#code").wrap('<a href="'+uData.html_url+'" target="_blank"></a>');
+		$('#content').append('<span class = "desc">Since then, they have amassed </span>');
+		$('#content').append('<span class = "stat">'+uData.public_repos+'</span><span class = "desc"> public repositories,</span>');
+		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.followers+'</span><span class = "desc"> followers and</span>');
+		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span></br>');
+		$('#content').append('<span class = "desc">They now work at </span><span class = "stat">'+uData.company+'</span><span class = "desc">.</span>');
 	});
 	getOrgs(userName);
 	getRepos(userName);
@@ -98,16 +100,27 @@ function showHelp() {
 
 //Information about Committed
 function showInfo() {
-	var info = 'Committed is not affiliated with GitHub, it simply uses the <a href = "https://developer.github.com">GitHub API</a>.</br>Committed was made with &hearts; by <a href = "http://nischaal.me">Nischaal Cooray</a>.</br>Committed is NOT optimized for mobile devices YET!'
+	var info = 'Committed is not affiliated with GitHub, it simply uses the <a href = "https://developer.github.com">GitHub API</a>.</br>Committed was made with &hearts; by <a href = "http://nischaal.me">Nischaal Cooray</a>.</br>Check out <a href ="https://github.com/nischaalc/committed">Committed</a> on GitHub!</br>Committed is NOT optimized for mobile devices YET!'
 	$('#messages').append('<p class = "info">'+info+'</p>');
 	$('#messages').show();
 	setTimeout(function() {
         $("#messages").fadeOut("slow", function() {
             $("#messages").hide();
         });
-    }, 7000);
+    }, 9000);
 }
 
+//Oops
+function showOops() {
+	var oops = 'Ah! Hello! I see that I didn\'t make myself understandable enough - sorry about that.</br>What I meant was to enter the username of the user that you are trying to find information about.</br>Now go get \'em!';
+	$('#messages').append('<p class = "oops">'+oops+'</p>');
+	$('#messages').show();
+	setTimeout(function() {
+        $("#messages").fadeOut("slow", function() {
+            $("#messages").hide();
+        });
+    }, 9000);
+}
 //Error message - not implemented fully yet
 function unrecognized(text) {
 	var error = '';
