@@ -4,6 +4,8 @@ body {
 	font-family: 'Lato', sans-serif;
 }
 
+/* Default css */
+
 #container {
 	display: -webkit-box;
 	display: -moz-box;
@@ -82,6 +84,23 @@ input {
 	50% {border-left: 1px solid #FFF;}
 }
 
+#go-back {
+	float: right;
+	margin-right: 1em;
+	margin-top: 1em;
+}
+
+#go-back:hover {
+	cursor: pointer;
+}
+
+/* ----------------------- */
+/* CSS for JS generated content */
+
+#content {
+	text-align: left;
+}
+
 .error {
 	color: #FF2929;
 }
@@ -89,3 +108,71 @@ input {
 .help {
 	color: #3EF763;
 }
+
+#uname {
+	font-size: 4em;
+	font-family: 'PT Sans', sans-serif;
+	text-align: left;
+}
+
+
+
+/* ----------------------- */
+
+/* Spinkit CSS */
+
+.spinner {
+  margin: 100px auto;
+  width: 50px;
+  height: 30px;
+  text-align: center;
+  font-size: 10px;
+  padding-top: 15%;
+}
+
+.spinner > div {
+  background-color: #08BF32;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+  
+  -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+  animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes stretchdelay {
+  0%, 40%, 100% { 
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% { 
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+
+/* ----------------------- */
