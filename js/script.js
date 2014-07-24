@@ -17,9 +17,10 @@ $('#username').keyup(function (e) {
 		$('#data').hide();
 		$('#messages').empty();
 		var enteredText = $('#username').val();
-		if (enteredText.length === 0) alert('Please enter a name!');
+		if (enteredText.length === 0) unrecognized(enteredText);
 		else {
 			if (enteredText == 'git help git') showHelp();
+			else if (enteredText == 'git info') showInfo();
 			else { 
 				$('.spinner').show();
 				getUser(enteredText);
@@ -35,10 +36,10 @@ function getUser(userName) {
 		uData = userData;
 		$('#search').fadeOut(750, function () {
 			$('#data').fadeIn(500);
+			$('#footer').fadeOut();
 		});
 		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uData.name+'</span>');
-		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> committing since '+(uData.created_at).substring(0,10)+'</span>');
-		
+		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> has been committing since '+(uData.created_at).substring(0,10)+'</span>');
 		$("#home").wrap('<a href="'+uData.blog+'"></a>');
 		$("#code").wrap('<a href="'+uData.html_url+'"></a>');
 		$('#content').append('<span class = "stat">'+uData.public_repos+'</span><span class = "desc"> public repositories.</span>');
@@ -48,6 +49,7 @@ function getUser(userName) {
 	});
 	getOrgs(userName);
 	getRepos(userName);
+	getLang(userName);
 }
 
 //Get users' organization info using GitHub API
@@ -69,6 +71,19 @@ function getRepos(user) {
 	});
 }
 
+//Get users' language stats and plot to graph
+function getLang(user) {
+	var ctx = document.getElementById("lang-chart").getContext("2d");
+	var data = [
+		{
+			value: 300,
+			color:"#F7464A",
+			label: "Red"
+		}
+	]
+	new Chart(ctx).Doughnut(data, {animateScale: true});
+}
+
 //Help message
 function showHelp() {
 	var help = 'Enter the username of the GitHub member you are looking for.';
@@ -81,9 +96,23 @@ function showHelp() {
     }, 5000);
 }
 
+//Information about Committed
+function showInfo() {
+	var info = 'Committed is not affiliated with GitHub, it simply uses the <a href = "https://developer.github.com">GitHub API</a>.</br>Committed was made with &hearts; by <a href = "http://nischaal.me">Nischaal Cooray</a>.</br>Committed is NOT optimized for mobile devices YET!'
+	$('#messages').append('<p class = "info">'+info+'</p>');
+	$('#messages').show();
+	setTimeout(function() {
+        $("#messages").fadeOut("slow", function() {
+            $("#messages").hide();
+        });
+    }, 7000);
+}
+
 //Error message - not implemented fully yet
-function unrecognized() {
-	var error = 'That user could not be found! Try again!';
+function unrecognized(text) {
+	var error = '';
+	if (text.length == 0) error = 'I ain\'t silly, I know you didn\'t type anything!</br>Try again!';
+	else error = 'Ah shucks... I couldn\'t find that user... Would you give me another chance?';
 	$('#messages').append('<p class = "error">'+error+'</p>');
 	$('#messages').show();
 	setTimeout(function() {
