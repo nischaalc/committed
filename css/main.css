@@ -1,11 +1,12 @@
+/* ----------------------- */
+/* Default css */
+
 body {
 	font-size: 16px;
 	text-align: center;
 	margin: 0;
 	font-family: 'Lato', sans-serif;
 }
-
-/* Default css */
 
 #container {
 	display: -webkit-box;
@@ -40,6 +41,7 @@ body {
 	border-right: 3px solid #C4C4C4;
 	border-bottom: 3px solid #C4C4C4;
 	border-left: 3px solid #C4C4C4;
+	box-shadow: 0 3px 7px #000;
 }
 
 #data-entry span {
@@ -52,49 +54,40 @@ body {
 
 #title {
 	font-size: 4em;
+	padding-top: 10%;
 }
 
-input, input:focus {
-	border: none;
-	outline: none;
-	background-color: rgb(0,0,0);
-	color: rgb(255, 255, 255);
+#footer{
+	display: block;
+	text-align: center;
+	font-size: 0.8em;
+	bottom: 0;
+	width: 100%;
+	height: 1.3em;
+	color: rgb(154, 154, 154);
+	position: fixed;
 }
 
-input {
-	-webkit-animation: blink-empty 1s infinite;
-	-moz-animation: blink-empty 1s infinite;
-	-ms-animation: blink-empty 1s infinite;
-	-o-animation: blink-empty 1s infinite;
-	border-left: transparent solid 1px;
-	margin:5px;
-	font-family: 'Inconsolata';
-	font-size: 1em;
+#footer a {
+	text-decoration: underline;
+	color: rgb(180, 180, 180);
 }
 
-@-webkit-keyframes blink-empty {
-	50% {border-left: 1px solid #FFF;}
+#footer a:hover {
+	color: rgb(150, 150, 150);
 }
 
-@-moz-keyframes blink-empty {
-	50% {border-left: 1px solid #FFF;}
-}
-
-@-ms-keyframes blink-empty {
-	50% {border-left: 1px solid #FFF;}
-}
-
-@-o-keyframes blink-empty {
-	50% {border-left: 1px solid #FFF;}
-}
+/* ----------------------- */
+/* CSS for containers that hold dynamically generated content */
 
 #images {
 	float: right;
+	margin-top: 1.3em;
 }
 
 #go-back {
-	margin-right: 1em;
-	margin-top: 1em;
+	margin-left: 0.7em;
+	margin-top: 1.5em;
 }
 
 #go-back:hover {
@@ -108,6 +101,13 @@ input {
 	background-color: #1595BF;
 	color: #9DDFF5;
 	font-family: 'Oswald', sans-serif; 
+	box-shadow: 0 3px 5px #000;
+}
+
+#main-content {
+	margin-left: 1em;
+	margin-right: 1em;
+	margin-top: 0.5em;
 }
 
 /* ----------------------- */
@@ -130,8 +130,18 @@ input {
 	text-align: left;
 }
 
-/* ----------------------- */
+.stat {
+	font-size: 3em;
+	font-family: 'Oswald', sans-serif; 
+	color: #1595BF;
+}
 
+.desc {
+	font-size: 2em;
+	color: #76C8E3;
+}
+
+/* ----------------------- */
 /* Spinkit CSS */
 
 .spinner {
@@ -185,6 +195,43 @@ input {
     transform: scaleY(1.0);
     -webkit-transform: scaleY(1.0);
   }
+}
+
+/* ----------------------- */
+/* CSS to simulate cursor blink */
+
+input, input:focus {
+	border: none;
+	outline: none;
+	background-color: rgb(0,0,0);
+	color: rgb(255, 255, 255);
+}
+
+input {
+	-webkit-animation: blink-empty 1s infinite;
+	-moz-animation: blink-empty 1s infinite;
+	-ms-animation: blink-empty 1s infinite;
+	-o-animation: blink-empty 1s infinite;
+	border-left: transparent solid 1px;
+	margin:5px;
+	font-family: 'Inconsolata';
+	font-size: 1em;
+}
+
+@-webkit-keyframes blink-empty {
+	50% {border-left: 1px solid #FFF;}
+}
+
+@-moz-keyframes blink-empty {
+	50% {border-left: 1px solid #FFF;}
+}
+
+@-ms-keyframes blink-empty {
+	50% {border-left: 1px solid #FFF;}
+}
+
+@-o-keyframes blink-empty {
+	50% {border-left: 1px solid #FFF;}
 }
 
 /* ----------------------- */
