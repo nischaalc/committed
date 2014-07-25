@@ -1,4 +1,4 @@
-Committed
+Committed 
 ========
 
 Utilizing GitHub API's *Committed* brings you a comprehensive summary of a GitHub users profile, complete with all the data that you would need to see at a glace. 
