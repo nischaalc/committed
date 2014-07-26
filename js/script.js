@@ -16,6 +16,7 @@ $('#username').keyup(function (e) {
 		$('#top-bar').empty();
 		$('#data').hide();
 		$('#messages').empty();
+       // $('#repos').empty();
 		var enteredText = $('#username').val();
 		if (enteredText.length === 0) unrecognized(enteredText);
 		else {
@@ -52,7 +53,7 @@ function getUser(userName) {
 	});
 	//getOrgs(userName);
     getLang(userName);
-	getRepos(userName);
+	//getRepos(userName);
 }
 
 //Get users' organization info using GitHub API
@@ -71,9 +72,9 @@ function getOrgs(username) {
 function getRepos(user) {
 	$.get(base + user + '/repos', function (repoData) {
 		rData = repoData;
-        $('#reposlangs').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody>');
-        $('#reposlangs').append('<tr><td>Test</td><td>Test</td><td>Test</td></tr>');
-        $('#reposlangs').append('</tbody></table>');
+        $('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody>');
+        $('#repos').append('<tr><td>Test</td><td>Test</td><td>Test</td></tr>');
+        $('#repos').append('</tbody></table>');
 	});
 }
 

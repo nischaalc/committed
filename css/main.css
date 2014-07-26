@@ -230,3 +230,34 @@ input {
 }
 
 /* ----------------------- */
+/* CSS for the table */
+
+table {
+    border-collapse: 
+    collapse; border-spacing: 0; 
+}
+
+th {
+    background: #1595BF;
+    color: #9DDFF5;
+    text-align: center;
+    padding: 0.5em;
+}
+
+td, th { 
+    border: 1px solid transparent;
+    height: 30px; 
+    transition: all 0.3s;
+}
+
+tr {
+    color: #148cb1;
+}
+
+tr:nth-child(even) td { background: rgba(79, 186, 222, 0.75); }   
+
+tr:nth-child(odd) td { background: #FFF; }  
+
+tr:hover { background: rgb(79, 186, 222
+
+/* ----------------------- */
