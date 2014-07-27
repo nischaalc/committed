@@ -50,10 +50,11 @@ function getUser(userName) {
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span></br>');
 		$('#content').append('<span class = "desc">'+((uData.name).split(" "))[0]+' currently works at </span><span class = "stat">'+uData.company+'</span>');
         $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uData.location+'</span><span class = "desc">.</span>');
+        $('content').append('<span class  = "desc">'+uData.name+' is a part of </span>');
 	});
-	//getOrgs(userName);
+	getOrgs(userName);
     getLang(userName);
-	//getRepos(userName);
+    getRepos(userName);
 }
 
 //Get users' organization info using GitHub API
@@ -64,17 +65,18 @@ function getOrgs(username) {
 		oData = orgData;
 		for (var orgs in oData) {
 			orgCount++;
+            $('#content').append()
 		}
 	});
 }
 
 //Get users' repo data using GitHub API
 function getRepos(user) {
+    var repoName = {};
+    var repoURL = {};
 	$.get(base + user + '/repos', function (repoData) {
 		rData = repoData;
-        $('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody>');
-        $('#repos').append('<tr><td>Test</td><td>Test</td><td>Test</td></tr>');
-        $('#repos').append('</tbody></table>');
+        $('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>Test</td><td>Test</td><td>Test</td></tr><tr><td>Test</td><td>Test</td><td>Test</td></tr><tr><td>Test</td><td>Test</td><td>Test</td></tr><tr><td>Test</td><td>Test</td><td>Test</td></tr></tbody></table>');
 	});
 }
 

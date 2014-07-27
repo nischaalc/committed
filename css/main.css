@@ -256,8 +256,8 @@ tr {
 
 tr:nth-child(even) td { background: rgba(79, 186, 222, 0.75); }   
 
-tr:nth-child(odd) td { background: #FFF; }  
+tr:nth-child(odd) td { background: #fff; }  
 
-tr:hover { background: rgb(79, 186, 222
+tr:hover { background: rgb(79, 186, 222);}
 
 /* ----------------------- */
