@@ -16,11 +16,11 @@ $('#username').keyup(function (e) {
 		$('#top-bar').empty();
 		$('#data').hide();
 		$('#messages').empty();
-       // $('#repos').empty();
+        $('#repos').empty();
 		var enteredText = $('#username').val();
 		if (enteredText.length === 0) unrecognized(enteredText);
 		else {
-			if (enteredText == 'git help git') showHelp();
+			if (enteredText == 'git help') showHelp();
 			else if (enteredText == 'git info') showInfo();
 			else if (enteredText == 'username') showOops();
 			else { 
@@ -40,7 +40,12 @@ function getUser(userName) {
 			$('#data').fadeIn(500);
 			$('#footer').fadeOut();
 		});
-		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uData.name+'</span>');
+		//Check that the user has a defined full name or use their username if they don't
+		var uName = userName;
+		if (uData.name !== null && uData.name !== undefined && uData.name.length) { 
+            uName = uData.name;
+        }
+		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uName+'</span>');
 		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> has been committing since '+(uData.created_at).substring(0,10)+'</span>');
 		$("#home").wrap('<a href="'+uData.blog+'" target="_blank"></a>');
 		$("#code").wrap('<a href="'+uData.html_url+'" target="_blank"></a>');
@@ -52,8 +57,7 @@ function getUser(userName) {
         $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uData.location+'</span><span class = "desc">.</span>');
         $('content').append('<span class  = "desc">'+uData.name+' is a part of </span>');
 	});
-	getOrgs(userName);
-    getLang(userName);
+	//getOrgs(userName);
     getRepos(userName);
 }
 
@@ -65,37 +69,57 @@ function getOrgs(username) {
 		oData = orgData;
 		for (var orgs in oData) {
 			orgCount++;
-            $('#content').append()
+            alert(orgs.login);
 		}
 	});
 }
 
 //Get users' repo data using GitHub API
 function getRepos(user) {
-    var repoName = {};
-    var repoURL = {};
+    var repos = [],
+		uLang = {},
+		freq;
+		
 	$.get(base + user + '/repos', function (repoData) {
-		rData = repoData;
-        $('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>Test</td><td>Test</td><td>Test</td></tr><tr><td>Test</td><td>Test</td><td>Test</td></tr><tr><td>Test</td><td>Test</td><td>Test</td></tr><tr><td>Test</td><td>Test</td><td>Test</td></tr></tbody></table>');
-	});
-}
+			rData = repoData;
+			$.each(rData, function(i, repoInf) {
+				repos.push({info:repoInf});
+			});
 
-//Get users' language stats and plot to graph
-function getLang(user) {
-	var ctx = document.getElementById("lang-chart").getContext("2d");
-	var data = [
-		{
-			value: 300,
-			color:"#F7464A",
-			label: "Red"
-		},
-        {
-            value: 300,
-            color: "#5d53d8",
-            label: "Blue"
-        }
-	]
-	new Chart(ctx).Doughnut(data, {animateScale: true});
+		//Sort repos by stars
+		function sortByStars(a, b) {
+				return b.info.stargazers_count - a.info.stargazers_count;
+		};
+		
+		repos.sort(sortByStars);
+		
+		$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td></tr></tbody></table>');
+		
+		//Get users' language stats and plot a graph of the data
+		var ctx = document.getElementById("lang-chart").getContext("2d");
+		var data = [];
+		var langChart = new Chart(ctx).Doughnut(data, {animateScale: true});
+		
+		//if (langList.length > 1) {
+				langChart.addData({
+				value: 130,
+				color: getColor(),
+				label: "Purple"
+			});
+		//}
+		
+		//Return a color for the Chart data
+		function getColor() {
+			return '#'+Math.floor(Math.random()*16777215).toString(16);
+		}
+		
+		//Sort stuff!
+		function sortByName(repos) {
+			repos.sort(function(a,b) {
+				return a.name - b.name;
+		   });
+		}
+	});
 }
 
 //Help message
