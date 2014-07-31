@@ -126,7 +126,7 @@ body {
 }
 
 .stat {
-	font-size: 3em;
+	font-size: 2.5em;
 	font-family: 'Oswald', sans-serif; 
 	color: #1595BF;
 }
@@ -233,8 +233,8 @@ input {
 /* CSS for the table */
 
 table {
-    border-collapse: 
-    collapse; border-spacing: 0; 
+    border-collapse: collapse;
+	border-spacing: 0; 
 }
 
 th {
@@ -251,13 +251,11 @@ td, th {
 }
 
 tr {
-    color: #148cb1;
+    color: #1595BF;
 }
 
 tr:nth-child(even) td { background: rgba(79, 186, 222, 0.75); }   
 
 tr:nth-child(odd) td { background: #fff; }  
-
-tr:hover { background: rgb(79, 186, 222);}
 
 /* ----------------------- */
