@@ -77,8 +77,9 @@ function getOrgs(username) {
 //Get users' repo data using GitHub API
 function getRepos(user) {
     var repos = [],
-		uLang = {},
-		freq;
+		uLang = [],
+		langList = [], //To prevent duplicates
+		arrInd;
 		
 	$.get(base + user + '/repos', function (repoData) {
 			rData = repoData;
@@ -94,31 +95,36 @@ function getRepos(user) {
 		repos.sort(sortByStars);
 		
 		$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td></tr></tbody></table>');
+
+		for (var i = 0; i < repos.length; i++) {
+			if (repos[i].info.language) {
+				if (langList.indexOf(repos[i].info.language) === -1) {
+					uLang.push({val:1, label:repos[i].info.language});
+					langList[langList.length] = repos[i].info.language;
+				} else {
+					uLang[langList.indexOf(repos[i].info.language)].val++;
+				}
+			}
+		}
 		
 		//Get users' language stats and plot a graph of the data
 		var ctx = document.getElementById("lang-chart").getContext("2d");
 		var data = [];
 		var langChart = new Chart(ctx).Doughnut(data, {animateScale: true});
 		
-		//if (langList.length > 1) {
-				langChart.addData({
-				value: 130,
+		for (var i = 0; i < langList.length; i++) {
+			langChart.addData({
+				value: uLang[i].val,
 				color: getColor(),
-				label: "Purple"
+				label: uLang[i].label
 			});
-		//}
+		}
 		
 		//Return a color for the Chart data
 		function getColor() {
 			return '#'+Math.floor(Math.random()*16777215).toString(16);
 		}
 		
-		//Sort stuff!
-		function sortByName(repos) {
-			repos.sort(function(a,b) {
-				return a.name - b.name;
-		   });
-		}
 	});
 }
 
