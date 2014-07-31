@@ -248,6 +248,8 @@ td, th {
     border: 1px solid transparent;
     height: 30px; 
     transition: all 0.3s;
+	padding-left: 1em;
+	padding-right: 1em;
 }
 
 tr {
