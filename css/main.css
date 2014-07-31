@@ -8,6 +8,39 @@ body {
 	font-family: 'Lato', sans-serif;
 }
 
+#API {
+	position: absolute; 
+	top: 10px; 
+	right: 10px; 
+	display: inline-block;
+	width: 11em;
+	height: 2em;
+	float: left;
+}
+
+#APItext {
+	visibility: hidden;
+	float: left;
+	font-family: 'Inconsolata';
+}
+
+#API:hover #APItext{
+	visibility: visible;
+}
+
+#bulb {
+	width: 1em;
+	height: 1em;
+	border-radius: 50%;
+	float: left;
+	margin: 2px;	
+	opacity: 0.3;
+}
+
+#API:hover #bulb{
+	opacity: 1;
+}
+
 #container {
 	display: -webkit-box;
 	display: -moz-box;
@@ -63,6 +96,10 @@ body {
 	margin-top: 1em;
 }
 
+canvas {
+	margin-right: 3em;
+}
+
 /* ----------------------- */
 /* CSS for containers that hold dynamically generated content */
 
@@ -100,6 +137,10 @@ body {
 /* CSS for JS generated content */
 
 #content {
+	text-align: left;
+}
+
+#orgz {
 	text-align: left;
 }
 
@@ -235,6 +276,7 @@ input {
 table {
     border-collapse: collapse;
 	border-spacing: 0; 
+	margin-top: 1em;
 }
 
 th {
