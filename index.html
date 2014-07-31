@@ -18,6 +18,8 @@
 
 <body>
 	
+	<div id = "API"><span id = "APItext">GitHub API status:</span></div>
+	
 	<div id = "search">
 		<div id = "title">Committed</div>
 			
@@ -51,6 +53,7 @@
 		<div id = "top-bar"></div>
 		<div id = "main-content">
 			<div id = "content"></div>
+			<div id = "orgz"></div>
             <canvas id="lang-chart" width="300" height="300"></canvas>
             <div id ="repos"></div>
 		</div>
@@ -61,5 +64,14 @@
 	<script src="js/Please-compressed.js"></script>	
 	<script src="js/script.js"></script>
 	
+	<script>
+	function apiStatus(data) {
+	  var stat = data.status;
+	  if (stat === 'good') {$('#API').append('<div id = "bulb" style = "background-color: #49ED37;"></div>');}
+	  else if (stat === 'minor') {$('#API').append('<div id = "bulb" style = "background-color: #E3ED26;"></div>');}
+	  else {$('#API').append('<div id = "bulb" style = "background-color: #ED2626;"></div>');}
+	}
+	</script>
+	<script src="https://status.github.com/api/status.json?callback=apiStatus"></script>
 </body>
 </html>
