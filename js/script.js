@@ -19,6 +19,7 @@ $('#username').keyup(function (e) {
 		$('#data').hide();
 		$('#messages').empty();
         $('#repos').empty();
+		$('#API').hide();
 		var enteredText = $('#username').val();
 		if (enteredText.length === 0) unrecognized(enteredText);
 		else {
@@ -198,6 +199,7 @@ function unrecognized(text) {
 $( '#go-back' ).click(function() {
 		$('#data').fadeOut(500, function () {
 			$('#search').fadeIn(500);
+			$('#API').fadeIn(500);
 			$('.spinner').hide();
 			$('#username').focus();
 			langChart.destroy();
