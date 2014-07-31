@@ -1,6 +1,7 @@
 var base = 'https://api.github.com/users/';
 var rData = {},
 	uData = {};
+var langChart;
 
 // Run on load
 $(document).ready(function() {
@@ -57,7 +58,7 @@ function getUser(userName) {
         $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uData.location+'</span><span class = "desc">.</span>');
         $('content').append('<span class  = "desc">'+uData.name+' is a part of </span>');
 	});
-	//getOrgs(userName);
+	getOrgs(userName);
     getRepos(userName);
 }
 
@@ -67,10 +68,10 @@ function getOrgs(username) {
 	var oData = {};
 	$.get(base + username+'/orgs', function (orgData) {
 		oData = orgData;
-		for (var orgs in oData) {
+		$.each(oData, function(i, orgInf) {
 			orgCount++;
-            alert(orgs.login);
-		}
+		});
+	
 	});
 }
 
@@ -110,21 +111,15 @@ function getRepos(user) {
 		//Get users' language stats and plot a graph of the data
 		var ctx = document.getElementById("lang-chart").getContext("2d");
 		var data = [];
-		var langChart = new Chart(ctx).Doughnut(data, {animateScale: true});
+		langChart = new Chart(ctx).Doughnut(data, {animateScale: true,animationEasing : "easeOutExpo"});
 		
 		for (var i = 0; i < langList.length; i++) {
 			langChart.addData({
 				value: uLang[i].val,
-				color: getColor(),
+				color: Please.make_color(),
 				label: uLang[i].label
 			});
 		}
-		
-		//Return a color for the Chart data
-		function getColor() {
-			return '#'+Math.floor(Math.random()*16777215).toString(16);
-		}
-		
 	});
 }
 
@@ -184,4 +179,5 @@ $( '#go-back' ).click(function() {
 			$('.spinner').hide();
 			$('#username').focus();
 		});
+	langChart.destroy();
 });
