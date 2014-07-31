@@ -14,6 +14,7 @@ $(document).ready(function() {
 $('#username').keyup(function (e) {
 	if (e.keyCode === 13) {
 		$('#content').empty(); 
+		$('#orgz').empty();
 		$('#top-bar').empty();
 		$('#data').hide();
 		$('#messages').empty();
@@ -42,37 +43,58 @@ function getUser(userName) {
 			$('#footer').fadeOut();
 		});
 		//Check that the user has a defined full name or use their username if they don't
-		var uName = userName;
+		var uName = userName,
+			uBlog = uData.blog, uCompany = uData.company, uLocation = uData.location;
+		
+		//Check for any required information that is null
 		if (uData.name !== null && uData.name !== undefined && uData.name.length) { 
             uName = uData.name;
         }
+		
+		if (uBlog === null || uBlog === undefined || !uBlog.length) {
+			$('#home').hide();
+		}
+		
+		if (uCompany === null || uCompany === undefined || !uCompany.length) {
+			uCompany = 'a secret location';
+		}
+		
+		if (uLocation === null || uLocation === undefined || !uLocation.length) {
+			uLocation = 'a hidden safe house';
+		}
+		
 		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uName+'</span>');
 		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> has been committing since '+(uData.created_at).substring(0,10)+'</span>');
-		$("#home").wrap('<a href="'+uData.blog+'" target="_blank"></a>');
+		$("#home").wrap('<a href="'+uBlog+'" target="_blank"></a>');
 		$("#code").wrap('<a href="'+uData.html_url+'" target="_blank"></a>');
 		$('#content').append('<span class = "desc">Since then, they have amassed </span>');
 		$('#content').append('<span class = "stat">'+uData.public_repos+'</span><span class = "desc"> public repositories,</span>');
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.followers+'</span><span class = "desc"> followers and</span>');
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span></br>');
-		$('#content').append('<span class = "desc">'+((uData.name).split(" "))[0]+' currently works at </span><span class = "stat">'+uData.company+'</span>');
-        $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uData.location+'</span><span class = "desc">.</span>');
-        $('content').append('<span class  = "desc">'+uData.name+' is a part of </span>');
+		$('#content').append('<span class = "desc">'+((uName).split(" "))[0]+' currently works at </span><span class = "stat">'+uCompany+'</span>');
+        $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uLocation+'</span><span class = "desc">.</span>');
+		
+		var orgCount = 0;
+		var oData = {};
+		$.get(base + userName+'/orgs', function (orgData) {
+			oData = orgData;
+			$.each(oData, function(i, orgInf) {
+				orgCount++;
+			});
+			if (orgCount === 0) {
+				$('#orgz').hide();
+			} else {
+				$('#orgz').show();
+				$('#orgz').append('<span class = "desc">'+((uName).split(" "))[0]+' is a member of</span><span class = "stat"> '+orgCount+'</span><span class = "desc"> organizations.</span>');
+			}
+		});
 	});
-	getOrgs(userName);
     getRepos(userName);
 }
 
 //Get users' organization info using GitHub API
-function getOrgs(username) {
-	var orgCount = 0;
-	var oData = {};
-	$.get(base + username+'/orgs', function (orgData) {
-		oData = orgData;
-		$.each(oData, function(i, orgInf) {
-			orgCount++;
-		});
-	
-	});
+function getOrgs(username, fullName) {
+
 }
 
 //Get users' repo data using GitHub API
@@ -178,6 +200,7 @@ $( '#go-back' ).click(function() {
 			$('#search').fadeIn(500);
 			$('.spinner').hide();
 			$('#username').focus();
+			langChart.destroy();
 		});
-	langChart.destroy();
+	$('#home').show();
 });
