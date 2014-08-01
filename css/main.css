@@ -34,7 +34,7 @@ body {
 	border-radius: 50%;
 	float: left;
 	margin: 2px;	
-	opacity: 0.3;
+	opacity: 0.5;
 }
 
 #API:hover #bulb{
