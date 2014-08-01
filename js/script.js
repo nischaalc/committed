@@ -3,7 +3,7 @@ var base = 'https://api.github.com/users/';
 var rData = {},
 	uData = {};
 var langChart;
-
+ 
 // Run on load
 $(document).ready(function() {
 	$('#username').focus();
