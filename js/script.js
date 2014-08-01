@@ -3,7 +3,7 @@ var base = 'https://api.github.com/users/';
 var rData = {},
 	uData = {};
 var langChart;
- 
+
 // Run on load
 $(document).ready(function() {
 	$('#username').focus();
@@ -77,7 +77,7 @@ function getUser(userName) {
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span></br>');
 		$('#content').append('<span class = "desc">'+((uName).split(" "))[0]+' currently works at </span><span class = "stat">'+uCompany+'</span>');
         $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uLocation+'</span><span class = "desc">.</span>');
-		
+		/*
 		//Get users' organization info
 		var orgCount = 0;
 		var oData = {};
@@ -99,7 +99,7 @@ function getUser(userName) {
 					$('#orgz').append('<span class = "stat"> '+(orgCount - 1)+'</span><span class = "desc"> other organizations.</span>');
 				}
 			}
-		});
+		});*/
 	});
 	getRepos(userName);
 }
@@ -108,23 +108,18 @@ function getUser(userName) {
 function getRepos(user) {
 	var repos = [],
 		uLang = [],
-		langList = [], //To prevent duplicates
-		page = 1,
+		langList = [], 
 		repoInf;
 
 	var ctx = document.getElementById("lang-chart").getContext("2d");
 	var data = [];
 	langChart = new Chart(ctx).Doughnut(data, {animateScale: true,animationEasing : "easeOutExpo",segmentStrokeWidth : 2});
 	
-	while (page !== 3) {
+	for (var page = 1; page < 2; page++) {
 		$.get(base+user+'/repos?&page='+page, function (repoData) {
 			rData = repoData;
-			alert(repoData.length);
-			if (repoData.length === 0) {
-				alert('here');
-			} 
-			else {
-				$.each(rData, function(i, repoInf) {
+			if (repoData.length !== 0) {
+				$.each(repoData, function(i, repoInf) {
 					repos.push({info:repoInf});
 				});
 				
@@ -149,10 +144,11 @@ function getRepos(user) {
 						label: uLang[i].label
 					});
 				}
-			}
+			} else {
+				page = 8;
+			}			
 		});
-	page++;
-	} 
+	}
 }
 
 //Sort repos by stars
