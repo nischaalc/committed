@@ -1,3 +1,4 @@
+//Global variables
 var base = 'https://api.github.com/users/';
 var rData = {},
 	uData = {};
@@ -64,6 +65,8 @@ function getUser(userName) {
 			uLocation = 'a hidden safe house';
 		}
 		
+		document.title = uName + '\'s résumés';
+		
 		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uName+'</span>');
 		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> has been committing since '+(uData.created_at).substring(0,10)+'</span>');
 		$("#home").wrap('<a href="'+uBlog+'" target="_blank"></a>');
@@ -75,75 +78,86 @@ function getUser(userName) {
 		$('#content').append('<span class = "desc">'+((uName).split(" "))[0]+' currently works at </span><span class = "stat">'+uCompany+'</span>');
         $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uLocation+'</span><span class = "desc">.</span>');
 		
+		//Get users' organization info
 		var orgCount = 0;
 		var oData = {};
+		var orgs = [];
 		$.get(base + userName+'/orgs', function (orgData) {
 			oData = orgData;
 			$.each(oData, function(i, orgInf) {
 				orgCount++;
+				orgs.push({info:orgInf});
 			});
 			if (orgCount === 0) {
 				$('#orgz').hide();
 			} else {
 				$('#orgz').show();
-				$('#orgz').append('<span class = "desc">'+((uName).split(" "))[0]+' is a member of</span><span class = "stat"> '+orgCount+'</span><span class = "desc"> organizations.</span>');
+				$('#orgz').append('<span class = "desc">'+((uName).split(" "))[0]+' is a member of</span><span class = "stat"> '+orgs[0].info.login+'</span><span class = "desc"> and </span>');
+				if ((orgCount - 1) === 1) {
+					$('#orgz').append('<span class = "stat"> '+orgs[1].info.login+'</span>.');
+				} else { 
+					$('#orgz').append('<span class = "stat"> '+(orgCount - 1)+'</span><span class = "desc"> other organizations.</span>');
+				}
 			}
 		});
 	});
-    getRepos(userName);
-}
-
-//Get users' organization info using GitHub API
-function getOrgs(username, fullName) {
-
+	getRepos(userName);
 }
 
 //Get users' repo data using GitHub API
 function getRepos(user) {
-    var repos = [],
+	var repos = [],
 		uLang = [],
 		langList = [], //To prevent duplicates
-		arrInd;
-		
-	$.get(base + user + '/repos', function (repoData) {
+		page = 1,
+		repoInf;
+
+	var ctx = document.getElementById("lang-chart").getContext("2d");
+	var data = [];
+	langChart = new Chart(ctx).Doughnut(data, {animateScale: true,animationEasing : "easeOutExpo",segmentStrokeWidth : 2});
+	
+	while (page !== 3) {
+		$.get(base+user+'/repos?&page='+page, function (repoData) {
 			rData = repoData;
-			$.each(rData, function(i, repoInf) {
-				repos.push({info:repoInf});
-			});
+			alert(repoData.length);
+			if (repoData.length === 0) {
+				alert('here');
+			} 
+			else {
+				$.each(rData, function(i, repoInf) {
+					repos.push({info:repoInf});
+				});
+				
+				repos.sort(sortByStars);
+				
+				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td></tr></tbody></table>');
 
-		//Sort repos by stars
-		function sortByStars(a, b) {
-				return b.info.stargazers_count - a.info.stargazers_count;
-		};
-		
-		repos.sort(sortByStars);
-		
-		$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td></tr></tbody></table>');
-
-		for (var i = 0; i < repos.length; i++) {
-			if (repos[i].info.language) {
-				if (langList.indexOf(repos[i].info.language) === -1) {
-					uLang.push({val:1, label:repos[i].info.language});
-					langList[langList.length] = repos[i].info.language;
-				} else {
-					uLang[langList.indexOf(repos[i].info.language)].val++;
+				for (var i = 0; i < repos.length; i++) {
+					if (repos[i].info.language) {
+						if (langList.indexOf(repos[i].info.language) === -1) {
+							uLang.push({val:1, label:repos[i].info.language});
+							langList[langList.length] = repos[i].info.language;
+						} else {
+							uLang[langList.indexOf(repos[i].info.language)].val++;
+						}
+					}
+				}
+				for (var i = 0; i < langList.length; i++) {
+					langChart.addData({
+						value: uLang[i].val,
+						color: Please.make_color(),
+						label: uLang[i].label
+					});
 				}
 			}
-		}
-		
-		//Get users' language stats and plot a graph of the data
-		var ctx = document.getElementById("lang-chart").getContext("2d");
-		var data = [];
-		langChart = new Chart(ctx).Doughnut(data, {animateScale: true,animationEasing : "easeOutExpo"});
-		
-		for (var i = 0; i < langList.length; i++) {
-			langChart.addData({
-				value: uLang[i].val,
-				color: Please.make_color(),
-				label: uLang[i].label
-			});
-		}
-	});
+		});
+	page++;
+	} 
+}
+
+//Sort repos by stars
+function sortByStars(a, b) {
+		return b.info.stargazers_count - a.info.stargazers_count;
 }
 
 //Help message
@@ -160,7 +174,7 @@ function showHelp() {
 
 //Information about Committed
 function showInfo() {
-	var info = 'Committed is not affiliated with GitHub, it simply uses the <a href = "https://developer.github.com">GitHub API</a>.</br>Committed was made with &hearts; by <a href = "http://nischaal.me">Nischaal Cooray</a>.</br>Check out <a href ="https://github.com/nischaalc/committed">Committed</a> on GitHub!</br>Committed is NOT optimized for mobile devices YET!'
+	var info = 'Committed is not affiliated with GitHub, it simply uses the <a href = "https://developer.github.com">GitHub API</a>.</br>Committed was made with &hearts; by <a href = "http://nischaal.me">Nischaal Cooray</a> and is licensed under the MIT license.</br>Check out <a href ="https://github.com/nischaalc/committed">Committed</a> on GitHub!</br>Committed is NOT optimized for mobile devices YET!'
 	$('#messages').append('<p class = "info">'+info+'</p>');
 	$('#messages').show();
 	setTimeout(function() {
@@ -205,4 +219,5 @@ $( '#go-back' ).click(function() {
 			langChart.destroy();
 		});
 	$('#home').show();
+	document.title = 'Committed';
 });
