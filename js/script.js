@@ -29,7 +29,7 @@ $('#username').keyup(function (e) {
 			else if (enteredText == 'username') showOops();
 			else { 
 				$('.spinner').show();
-				getUser(enteredText);
+				getData(enteredText);
 			}
 			$('#username').val('');
 		}
@@ -37,7 +37,7 @@ $('#username').keyup(function (e) {
 });
 
 //Get user data using GitHub API
-function getUser(userName) {
+function getData(userName) {
 	$.get(base + userName, function (userData) {
 		uData = userData;
 		$('#search').fadeOut(750, function () {
@@ -65,7 +65,7 @@ function getUser(userName) {
 			uLocation = 'a hidden safe house';
 		}
 		
-		document.title = uName + '\'s résumés';
+		document.title = uName + '\'s résumé';
 		
 		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uName+'</span>');
 		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> has been committing since '+(uData.created_at).substring(0,10)+'</span>');
@@ -101,31 +101,29 @@ function getUser(userName) {
 			}
 		});*/
 	});
-	getRepos(userName);
-}
 
-//Get users' repo data using GitHub API
-function getRepos(user) {
+	//Get users' repo data using GitHub API
 	var repos = [],
 		uLang = [],
 		langList = [], 
-		repoInf;
+		repoInf,
+		finished = false,
+		page = 1;
 
 	var ctx = document.getElementById("lang-chart").getContext("2d");
 	var data = [];
 	langChart = new Chart(ctx).Doughnut(data, {animateScale: true,animationEasing : "easeOutExpo",segmentStrokeWidth : 2});
+	getRepos(page);
 	
-	for (var page = 1; page < 2; page++) {
-		$.get(base+user+'/repos?&page='+page, function (repoData) {
-			rData = repoData;
+	function getRepos(pageNum) {
+		$.get(base+userName+'/repos?&page='+pageNum, function (repoData) {
+		rData = repoData;
 			if (repoData.length !== 0) {
 				$.each(repoData, function(i, repoInf) {
 					repos.push({info:repoInf});
 				});
 				
 				repos.sort(sortByStars);
-				
-				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td></tr></tbody></table>');
 
 				for (var i = 0; i < repos.length; i++) {
 					if (repos[i].info.language) {
@@ -137,6 +135,12 @@ function getRepos(user) {
 						}
 					}
 				}
+			} else {
+				finished = true;
+			}			
+		}).done(function() {
+			if (finished === true) {
+				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td></tr></tbody></table>'); 
 				for (var i = 0; i < langList.length; i++) {
 					langChart.addData({
 						value: uLang[i].val,
@@ -145,8 +149,9 @@ function getRepos(user) {
 					});
 				}
 			} else {
-				page = 8;
-			}			
+				page++
+				getRepos(page);
+			}
 		});
 	}
 }
