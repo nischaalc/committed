@@ -65,25 +65,27 @@ function getData(userName) {
 			uLocation = 'a hidden safe house';
 		}
 		
-		document.title = uName + '\'s résumé';
+		document.title = uName;
 
 		var imageurl = 'url('+uData.avatar_url+')';
-		//$('#code').css('background-image', imageurl);
+
 		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uName+'</span>');
 		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> has been committing since '+(uData.created_at).substring(0,10)+'</span>');
 		$("#home").wrap('<a href="'+uBlog+'" target="_blank"></a>');
 		$("#code").wrap('<a href="'+uData.html_url+'" target="_blank"></a>');
+		$("#mail").wrap('<a href="mailto:'+uData.email+'" target="_blank"></a>');
 		$('#content').append('<span class = "desc">Since then, they have amassed </span>');
 		$('#content').append('<span class = "stat">'+uData.public_repos+'</span><span class = "desc"> public repositories,</span>');
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.followers+'</span><span class = "desc"> followers and</span>');
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span></br>');
 		$('#content').append('<span class = "desc">'+((uName).split(" "))[0]+' currently works at </span><span class = "stat">'+uCompany+'</span>');
         $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uLocation+'</span><span class = "desc">.</span>');
-		
+
 		//Get users' organization info
 		var orgCount = 0;
 		var oData = {};
 		var orgs = [];
+		var orgBase = 'https://github.com/';
 		$.get(base + userName+'/orgs', function (orgData) {
 			oData = orgData;
 			$.each(oData, function(i, orgInf) {
@@ -94,14 +96,21 @@ function getData(userName) {
 				$('#orgz').hide();
 			} else {
 				$('#orgz').show();
-				$('#orgz').append('<span class = "desc">'+((uName).split(" "))[0]+' is a member of</span><span class = "stat"> '+orgs[0].info.login+'</span><span class = "desc"> and </span>');
+				$('#orgz').append('<span class = "desc">'+((uName).split(" "))[0]+' is also a member of</span><span class = "stat"> '+orgs[0].info.login+'</span><span class = "desc"> and </span>');
+				
 				if ((orgCount - 1) === 1) {
-					$('#orgz').append('<span class = "stat"> '+orgs[1].info.login+'</span>.');
+					$('#orgz').append('<span class = "stat"> '+orgs[1].info.login+'</span>.</br>');
 				} else { 
-					$('#orgz').append('<span class = "stat"> '+(orgCount - 1)+'</span><span class = "desc"> other organizations.</span>');
+					$('#orgz').append('<span class = "stat"> '+(orgCount - 1)+'</span><span class = "desc"> other organizations.</span></br>');
+				}
+				
+				for (var i = 0; i < orgs.length; i++) {
+					$('#orgz').append('<a href="'+(orgBase+orgs[i].info.login)+'" target=_blank><img src = "'+orgs[i].info.avatar_url+'"/></a>');
 				}
 			}
 		});
+	}).fail(function() {
+		unrecognized();
 	});
 
 	//Get users' repo data using GitHub API
@@ -142,12 +151,11 @@ function getData(userName) {
 			}			
 		}).done(function() {
 			if (finished === true) {
-				$('#header').append(((uName).split(" "))[0]+'\'s most popular Repos and most used languages');
-				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td></tr></tbody></table>'); 
+				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th><th>Description</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td><td>'+repos[0].info.description+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td><td>'+repos[1].info.description+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td><td>'+repos[2].info.description+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td><td>'+repos[3].info.description+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td><td>'+repos[4].info.description+'</td></tr></tbody></table>'); 
 				for (var i = 0; i < langList.length; i++) {
 					langChart.addData({
 						value: uLang[i].val,
-						color: Please.make_color(),
+						color: randomColor(),
 						label: uLang[i].label
 					});
 				}
@@ -199,18 +207,17 @@ function showOops() {
         });
     }, 9000);
 }
-//Error message - not implemented fully yet
-function unrecognized(text) {
-	var error = '';
-	if (text.length == 0) error = 'I ain\'t silly, I know you didn\'t type anything!</br>Try again!';
-	else error = 'Ah shucks... I couldn\'t find that user... Would you give me another chance?';
+//Error message if user not found
+function unrecognized() {
+	var error = 'Ah shucks... I couldn\'t find that user... Would you give me another chance?';
 	$('#messages').append('<p class = "error">'+error+'</p>');
 	$('#messages').show();
+	$('.spinner').hide();
 	setTimeout(function() {
         $("#messages").fadeOut("slow", function() {
             $("#messages").hide();
         });
-    }, 5000);
+    }, 7000);
 }
 
 // Take user back to search screen
@@ -221,6 +228,7 @@ $( '#go-back' ).click(function() {
 			$('.spinner').hide();
 			$('#username').focus();
 			langChart.destroy();
+			$('#header').empty();
 		});
 	$('#home').show();
 	document.title = 'Committed';
