@@ -47,33 +47,36 @@
 		<span id = "images">
 			<img src = "images/home.png" id = "home" style = "margin-right: 2em;" alt = "Homepage"/>
 			<img src = "images/code.png" id = "code" style = "margin-right: 2em;" alt = "GitHub"/>
+			<img src = "images/mail.png" id = "mail" style = "margin-right: 2em;" alt = "Email" />
 		</span>
 		<img src = "images/search.png" id = "go-back" style = "float:left;" alt = "Go Back"/>
 		<div id = "top-bar"></div>
 		<div id = "main-content">
 			<div id = "content"></div>
-			<div id = "orgz"></div>
-			<div id = "repolang">
-				<span id = "header"></span>
-				<canvas id="lang-chart" width="200" height="200"></canvas>
+			<div id = "repo">
+				<div id = "rheader">Their most popular repos!</div>
 				<div id ="repos"></div>
 			</div>
+			<div id = "lang">
+				<canvas id="lang-chart" width="300" height="300"></canvas>
+				<div id = "lheader">The languages they use the most!</div>
+			</div>
+			<div id = "orgz"></div>
 		</div>
 	</div>
 
 	<script src="js/jquery.js"></script>
 	<script src="js/Chart.min.js"></script>
-	<script src="js/Please-compressed.js"></script>	
+	<script src="js/randomColor.js"></script>
 	<script src="js/script.js"></script>
-	<!--
+	
 	<script>
 	function apiStatus(data) {
-	  var stat = data.status;
-	  if (stat === 'good') {$('#API').append('<div id = "bulb" style = "background-color: #49ED37;"></div>');}
-	  else if (stat === 'minor') {$('#API').append('<div id = "bulb" style = "background-color: #E3ED26;"></div>');}
-	  else {$('#API').append('<div id = "bulb" style = "background-color: #ED2626;"></div>');}
+		if (data.status === 'good') {$('#API').append('<div id = "bulb" style = "background-color: #49ED37;"></div>');}
+		else if (data.status === 'minor') {$('#API').append('<div id = "bulb" style = "background-color: #E3ED26;"></div>');}
+		else {$('#API').append('<div id = "bulb" style = "background-color: #ED2626;"></div>');}
 	}
 	</script>
-	<script src="https://status.github.com/api/status.json?callback=apiStatus"></script>-->
+	<script src="https://status.github.com/api/status.json?callback=apiStatus"></script>
 </body>
 </html>
