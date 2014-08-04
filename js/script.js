@@ -93,7 +93,7 @@ function getData(userName) {
 				orgs.push({info:orgInf});
 			});
 			if (orgCount === 0) {
-				$('#orgz').hide();
+				$('#orgz').append('<span class = "desc">Alas!</br>'+((uName).split(" "))[0]+' is not a member of any organizations. Check back soon and they may be a part of a couple.</span>');
 			} else {
 				$('#orgz').show();
 				$('#orgz').append('<span class = "desc">'+((uName).split(" "))[0]+' is also a member of</span><span class = "stat"> '+orgs[0].info.login+'</span><span class = "desc"> and </span>');
