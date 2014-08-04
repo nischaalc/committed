@@ -93,7 +93,6 @@ body {
 
 #lang-chart {
 	float: left;
-	margin-top: 1em;
 }
 
 canvas {
@@ -106,6 +105,7 @@ canvas {
 	padding-top: 1em;
 	font-size: 1.5em;
 	color: #76C8E3;
+	margin-left: -1em;
 }
 
 /* ----------------------- */
@@ -169,7 +169,7 @@ canvas {
 }
 
 #lheader {
-	padding-top: 4em;
+	padding-top: 3em;
 	float: left;
 	width: 5em;
 }
@@ -183,7 +183,7 @@ canvas {
 
 #orgz {
 	text-align: center;
-	margin-top: 2em;
+	margin-top: 3em;
 	padding-left: 1em;
 }
 
