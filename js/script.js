@@ -66,7 +66,10 @@ function getData(userName) {
 		}
 		
 		document.title = uName + '\'s résumé';
+		location.hash = userName;
 		
+		var imageurl = 'url('+uData.avatar_url+')';
+		//$('#code').css('background-image', imageurl);
 		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uName+'</span>');
 		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> has been committing since '+(uData.created_at).substring(0,10)+'</span>');
 		$("#home").wrap('<a href="'+uBlog+'" target="_blank"></a>');
