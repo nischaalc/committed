@@ -66,8 +66,7 @@ function getData(userName) {
 		}
 		
 		document.title = uName + '\'s résumé';
-		location.hash = userName;
-		
+
 		var imageurl = 'url('+uData.avatar_url+')';
 		//$('#code').css('background-image', imageurl);
 		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uName+'</span>');
