@@ -2,7 +2,7 @@
 var base = 'https://api.github.com/users/';
 var rData = {},
 	uData = {};
-var langChart;
+var langChart, uName;
 
 // Run on load
 $(document).ready(function() {
@@ -45,8 +45,8 @@ function getData(userName) {
 			$('#footer').fadeOut();
 		});
 		//Check that the user has a defined full name or use their username if they don't
-		var uName = userName,
-			uBlog = uData.blog, uCompany = uData.company, uLocation = uData.location;
+		uName = userName;
+		var	uBlog = uData.blog, uCompany = uData.company, uLocation = uData.location;
 		
 		//Check for any required information that is null
 		if (uData.name !== null && uData.name !== undefined && uData.name.length) { 
@@ -77,7 +77,7 @@ function getData(userName) {
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span></br>');
 		$('#content').append('<span class = "desc">'+((uName).split(" "))[0]+' currently works at </span><span class = "stat">'+uCompany+'</span>');
         $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uLocation+'</span><span class = "desc">.</span>');
-		/*
+		
 		//Get users' organization info
 		var orgCount = 0;
 		var oData = {};
@@ -99,7 +99,7 @@ function getData(userName) {
 					$('#orgz').append('<span class = "stat"> '+(orgCount - 1)+'</span><span class = "desc"> other organizations.</span>');
 				}
 			}
-		});*/
+		});
 	});
 
 	//Get users' repo data using GitHub API
@@ -140,6 +140,7 @@ function getData(userName) {
 			}			
 		}).done(function() {
 			if (finished === true) {
+				$('#header').append(((uName).split(" "))[0]+'\'s most popular Repos and most used languages');
 				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td></tr></tbody></table>'); 
 				for (var i = 0; i < langList.length; i++) {
 					langChart.addData({
