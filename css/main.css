@@ -8,6 +8,11 @@ body {
 	font-family: 'Lato', sans-serif;
 }
 
+a {
+	text-decoration: none;
+	color: #1595BF;
+}
+
 #API {
 	position: absolute; 
 	top: 10px; 
@@ -181,7 +186,7 @@ canvas {
 	-webkit-column-count: 4;
 	-moz-column-count: 4;
 	column-count: 4;
-	text-align: left;
+	text-align: center;
 }
 
 #lang, 
@@ -223,6 +228,10 @@ canvas {
 .info,
 .info a {
 	color: #1EDEF7;
+}
+
+.info a {
+	text-decoration: underline;
 }
 
 .oops {
@@ -364,6 +373,10 @@ td, th {
 
 tr {
     color: #1595BF;
+}
+
+td img {
+	margin-left: 1em;
 }
 
 tr:nth-child(even) td { background: rgba(79, 186, 222, 0.75); }   
