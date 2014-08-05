@@ -25,7 +25,7 @@ $('#username').keyup(function (e) {
 		$('#repo').hide();
 		$('#lang').hide();
 		$('#orgz').hide();
-		var enteredText = $('#username').val();
+		var enteredText = ($('#username').val()).trim();
 		if (enteredText.length === 0) unrecognized();
 		else {
 			if (enteredText == 'git help') showHelp();
@@ -82,7 +82,7 @@ function getData(userName) {
 		$('#content').append('<span class = "stat">'+uData.public_repos+'</span><span class = "desc"> public repositories,</span>');
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.followers+'</span><span class = "desc"> followers and</span>');
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span></br>');
-		$('#content').append('<span class = "desc">'+((uName).split(" "))[0]+' currently works at </span><span class = "stat">'+uCompany+'</span>');
+		$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' currently works at </span><span class = "stat">'+uCompany+'</span>');
         $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uLocation+'</span><span class = "desc">.</span>');
 
 		//Get users' organization info
@@ -97,9 +97,9 @@ function getData(userName) {
 				orgs.push({info:orgInf});
 			});
 			if (orgCount === 0) {
-				$('#orgz').append('<span class = "desc">Alas!</br>'+((uName).split(" "))[0]+' is not a member of any organizations.</br>Check back soon and they may be a part of a couple.</span>');
+				$('#orgz').append('<span class = "desc">Alas!</br>'+((uName).split(/[^A-Za-z]/))[0]+' is not a member of any organizations.</br>Check back soon and they may be a part of a couple.</span>');
 			} else {
-				$('#orgz').append('<span class = "desc">'+((uName).split(" "))[0]+' is also a member of</span><span class = "stat"> '+orgs[0].info.login+'</span><span class = "desc"> and </span>');
+				$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is also a member of</span><span class = "stat"> '+orgs[0].info.login+'</span><span class = "desc"> and </span>');
 				
 				if ((orgCount - 1) === 1) {
 					$('#orgz').append('<span class = "stat"> '+orgs[1].info.login+'</span>.</br>');
