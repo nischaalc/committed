@@ -1,8 +1,10 @@
 //Global variables
-var base = 'https://api.github.com/users/';
-var rData = {},
-	uData = {};
-var langChart, uName;
+var base = 'https://api.github.com/users/',	
+	htmlBase = 'https://github.com/',
+	googleBase = 'https://www.google.com/#q=',
+	rData = {},
+	uData = {},
+	langChart, uName;
 
 // Run on load
 $(document).ready(function() {
@@ -20,7 +22,7 @@ $('#username').keyup(function (e) {
 		$('#messages').empty();
         $('#repos').empty();
 		$('#llegend').empty();
-		$('#data').hide(); //Hide sections to prevent FOUC
+		$('#data').hide(); //Hide sections to prevent FOUC... does not prevent FOUC :(
 		$('#API').hide();
 		$('#repo').hide();
 		$('#lang').hide();
@@ -61,6 +63,10 @@ function getData(userName) {
 			$('#home').hide();
 		}
 		
+		if (uData.email === null || uData.email === undefined || !uData.email) {
+			$('#mail').hide();
+		}
+		
 		if (uCompany === null || uCompany === undefined || !uCompany.length) {
 			uCompany = 'a secret location';
 		}
@@ -70,26 +76,23 @@ function getData(userName) {
 		}
 		
 		document.title = uName;
-
-		var imageurl = 'url('+uData.avatar_url+')';
-
+		console.log(htmlBase+userName+'?tab=repositories');
 		$('#top-bar').append('<span id = "uname" style = "margin-left: 0.3em;">'+uName+'</span>');
 		$('#top-bar').append('<span id = "membersince" style = "margin-left: 1em;"> has been committing since '+(uData.created_at).substring(0,10)+'</span>');
 		$("#home").wrap('<a href="'+uBlog+'" target="_blank"></a>');
 		$("#code").wrap('<a href="'+uData.html_url+'" target="_blank"></a>');
 		$("#mail").wrap('<a href="mailto:'+uData.email+'" target="_blank"></a>');
 		$('#content').append('<span class = "desc">Since then, they have amassed </span>');
-		$('#content').append('<span class = "stat">'+uData.public_repos+'</span><span class = "desc"> public repositories,</span>');
-		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.followers+'</span><span class = "desc"> followers and</span>');
-		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;">'+uData.public_gists+'</span><span class = "desc"> gists.</span></br>');
-		$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' currently works at </span><span class = "stat">'+uCompany+'</span>');
-        $('#content').append('<span class = "desc"> and lives in </span><span class = "stat">'+uLocation+'</span><span class = "desc">.</span>');
+		$('#content').append('<span class = "stat"><a href = "'+(htmlBase+userName+'?tab=repositories')+'" target = _blank>'+uData.public_repos+'</a></span><span class = "desc"> public repositories,</span>');
+		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;"><a href = "'+(htmlBase+userName+'/followers')+'" target = _blank>'+uData.followers+'</a></span><span class = "desc"> followers and</span>');
+		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;"><a href = "https://gist.github.com/'+userName+'" target = _blank>'+uData.public_gists+'</a></span><span class = "desc"> gists.</span></br>');
+		$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' currently works at </span><span class = "stat"><a href = "'+(googleBase+uCompany)+'" target = _blank>'+uCompany+'</a></span>');
+        $('#content').append('<span class = "desc"> and lives in </span><span class = "stat"><a href = "'+(googleBase+uLocation)+'" target = _blank>'+uLocation+'</a></span><span class = "desc">.</span>');
 
 		//Get users' organization info
 		var orgCount = 0;
 		var oData = {};
 		var orgs = [];
-		var orgBase = 'https://github.com/';
 		$.get(base + userName+'/orgs', function (orgData) {
 			oData = orgData;
 			$.each(oData, function(i, orgInf) {
@@ -99,20 +102,22 @@ function getData(userName) {
 			if (orgCount === 0) {
 				$('#orgz').append('<span class = "desc">Alas!</br>'+((uName).split(/[^A-Za-z]/))[0]+' is not a member of any organizations.</br>Check back soon and they may be a part of a couple.</span>');
 			} else {
-				$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is also a member of</span><span class = "stat"> '+orgs[0].info.login+'</span><span class = "desc"> and </span>');
+				$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is also a member of </span><span class = "stat"><a href = "'+(htmlBase+orgs[0].info.login)+'" target = _blank>'+orgs[0].info.login+'</a></span>');
 				
 				if ((orgCount - 1) === 1) {
-					$('#orgz').append('<span class = "stat"> '+orgs[1].info.login+'</span>.</br>');
+					$('#orgz').append('<span class = "desc"> and </span><span class = "stat"> <a href = "'+(htmlBase+orgs[1].info.login)+'" target = _blank>'+orgs[1].info.login+'</span>.</br>');
+				} else if ((orgCount - 1) === 0) {
+					$('#orgz').append('.</br>');
 				} else { 
-					$('#orgz').append('<span class = "stat"> '+(orgCount - 1)+'</span><span class = "desc"> other organizations.</span></br>');
+					$('#orgz').append('<span class = "desc"> and </span><span class = "desc"> '+(orgCount - 1)+' other organizations.</span></br>');
 				}
 				
 				for (var i = 0; i < orgs.length; i++) {
-					$('#orgz').append('<a href="'+(orgBase+orgs[i].info.login)+'" target=_blank><img src = "'+orgs[i].info.avatar_url+'"/></a>');
+					$('#orgz').append('<a href="'+(htmlBase+orgs[i].info.login)+'" target=_blank><img src = "'+orgs[i].info.avatar_url+'"/></a>');
 				}
 			}
 		}).done(function() {
-			$('#orgz').show()
+			$('#orgz').fadeIn(500)
 		});
 	}).fail(function() {
 		unrecognized();
@@ -157,7 +162,7 @@ function getData(userName) {
 		}).done(function() {
 			if (finished === true) {
 				getPerc(uLang);
-				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th><th>Description</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td><td>'+repos[0].info.description+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td><td>'+repos[1].info.description+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td><td>'+repos[2].info.description+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td><td>'+repos[3].info.description+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td><td>'+repos[4].info.description+'</td></tr></tbody></table>'); 
+				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th><th>Description</th></tr></thead><tbody><tr><td><a href = "'+repos[0].info.html_url+'" target = _blank>'+repos[0].info.name+hasHome(repos,0)+'</a></td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td><td>'+repos[0].info.description+'</td></tr><tr><td><a href = "'+repos[1].info.html_url+'" target = _blank>'+repos[1].info.name+hasHome(repos,1)+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td><td>'+repos[1].info.description+'</td></tr><tr><td><a href = "'+repos[2].info.html_url+'" target = _blank>'+repos[2].info.name+hasHome(repos,2)+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td><td>'+repos[2].info.description+'</td></tr><tr><td><a href = "'+repos[3].info.html_url+'" target = _blank>'+repos[3].info.name+hasHome(repos,3)+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td><td>'+repos[3].info.description+'</td></tr><tr><td><a href = "'+repos[4].info.html_url+'" target = _blank>'+repos[4].info.name+hasHome(repos,4)+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td><td>'+repos[4].info.description+'</td></tr></tbody></table>'); 
 				var currentColor;
 				for (var i = 0; i < uLang.length; i++) {
 				currentColor = randomColor();
@@ -185,6 +190,16 @@ function getData(userName) {
 	}
 }
 
+// Check if a repo has an external homepage
+function hasHome(repos, i) {
+	if (repos[i].info.homepage) {
+		return ('<a href = "'+repos[i].info.homepage+'" target = _blank><img src = "images/link.png" /></a>');
+	} else {
+		return '';
+	}
+}
+
+//Calculate the percentage use of the users languages
 function getPerc(uLang) {
 	var grandTot = 0;
 	for (var i = 0; i < uLang.length; i++) {
@@ -203,14 +218,14 @@ function sortByStars(a, b) {
 
 //Help message
 function showHelp() {
-	var help = 'Enter the username of the GitHub member you are looking for.';
+	var help = 'To search, enter the username of the GitHub user you are looking for.</br>The BIG blue words and numbers are links.</br>Click on a repo name to be taken to its GitHub page.</br>The <img src = "images/link.png" /> icon next to a repo name indicates that a project has an external homepage (in addition to the listing on GitHub) - click it to be taken there.</br>That\'s it! Thank you for using Committed!';
 	$('#messages').append('<p class = "help">'+help+'</p>');
 	$('#messages').show();
 	setTimeout(function() {
         $("#messages").fadeOut("slow", function() {
             $("#messages").hide();
         });
-    }, 5000);
+    }, 9000);
 }
 
 //Information about Committed
