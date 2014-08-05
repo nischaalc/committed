@@ -14,15 +14,19 @@ $(document).ready(function() {
 //Detect 'Enter' key being pressed
 $('#username').keyup(function (e) {
 	if (e.keyCode === 13) {
-		$('#content').empty(); 
+		$('#content').empty(); //Empty sections to prevent data overflow
 		$('#orgz').empty();
 		$('#top-bar').empty();
-		$('#data').hide();
 		$('#messages').empty();
         $('#repos').empty();
+		$('#llegend').empty();
+		$('#data').hide(); //Hide sections to prevent FOUC
 		$('#API').hide();
+		$('#repo').hide();
+		$('#lang').hide();
+		$('#orgz').hide();
 		var enteredText = $('#username').val();
-		if (enteredText.length === 0) unrecognized(enteredText);
+		if (enteredText.length === 0) unrecognized();
 		else {
 			if (enteredText == 'git help') showHelp();
 			else if (enteredText == 'git info') showInfo();
@@ -93,9 +97,8 @@ function getData(userName) {
 				orgs.push({info:orgInf});
 			});
 			if (orgCount === 0) {
-				$('#orgz').append('<span class = "desc">Alas!</br>'+((uName).split(" "))[0]+' is not a member of any organizations. Check back soon and they may be a part of a couple.</span>');
+				$('#orgz').append('<span class = "desc">Alas!</br>'+((uName).split(" "))[0]+' is not a member of any organizations.</br>Check back soon and they may be a part of a couple.</span>');
 			} else {
-				$('#orgz').show();
 				$('#orgz').append('<span class = "desc">'+((uName).split(" "))[0]+' is also a member of</span><span class = "stat"> '+orgs[0].info.login+'</span><span class = "desc"> and </span>');
 				
 				if ((orgCount - 1) === 1) {
@@ -108,6 +111,8 @@ function getData(userName) {
 					$('#orgz').append('<a href="'+(orgBase+orgs[i].info.login)+'" target=_blank><img src = "'+orgs[i].info.avatar_url+'"/></a>');
 				}
 			}
+		}).done(function() {
+			$('#orgz').show()
 		});
 	}).fail(function() {
 		unrecognized();
@@ -139,7 +144,7 @@ function getData(userName) {
 				for (var i = 0; i < repos.length; i++) {
 					if (repos[i].info.language) {
 						if (langList.indexOf(repos[i].info.language) === -1) {
-							uLang.push({val:1, label:repos[i].info.language});
+							uLang.push({val:1, label:repos[i].info.language, percentage:'', color:''});
 							langList[langList.length] = repos[i].info.language;
 						} else {
 							uLang[langList.indexOf(repos[i].info.language)].val++;
@@ -151,19 +156,43 @@ function getData(userName) {
 			}			
 		}).done(function() {
 			if (finished === true) {
+				getPerc(uLang);
 				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th><th>Description</th></tr></thead><tbody><tr><td>'+repos[0].info.name+'</td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td><td>'+repos[0].info.description+'</td></tr><tr><td>'+repos[1].info.name+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td><td>'+repos[1].info.description+'</td></tr><tr><td>'+repos[2].info.name+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td><td>'+repos[2].info.description+'</td></tr><tr><td>'+repos[3].info.name+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td><td>'+repos[3].info.description+'</td></tr><tr><td>'+repos[4].info.name+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td><td>'+repos[4].info.description+'</td></tr></tbody></table>'); 
-				for (var i = 0; i < langList.length; i++) {
+				var currentColor;
+				for (var i = 0; i < uLang.length; i++) {
+				currentColor = randomColor();
+				uLang[i].color = currentColor;
 					langChart.addData({
 						value: uLang[i].val,
-						color: randomColor(),
+						color: currentColor,
 						label: uLang[i].label
 					});
 				}
+				var listString = '<ul>';
+				for (var i = 0; i < uLang.length; i++) {
+					listString += '<li style = "color:'+uLang[i].color+';"><b>'+uLang[i].label + ': ' + uLang[i].percentage + '</b><li>';
+				}
+				
+				listString += '</ul>';
+				$('#llegend').append(listString);
+				$('#repo').fadeIn(800);
+				$('#lang').fadeIn(800);
 			} else {
 				page++
 				getRepos(page);
 			}
 		});
+	}
+}
+
+function getPerc(uLang) {
+	var grandTot = 0;
+	for (var i = 0; i < uLang.length; i++) {
+		grandTot +=uLang[i].val;
+	}
+	
+	for (var j = 0; j < uLang.length; j++) {
+		uLang[j].percentage = (Math.round((uLang[j].val/grandTot)*100)) + '%';
 	}
 }
 
