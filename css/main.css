@@ -92,7 +92,7 @@ body {
 }
 
 #lang-chart {
-	float: left;
+	float: right;
 }
 
 canvas {
@@ -141,7 +141,8 @@ canvas {
 	margin-top: 0.5em;
 }
 
-#repo {
+#repo,
+#lang {
 	display: -webkit-box;
 	display: -moz-box;
 	display: -ms-flexbox;
@@ -159,6 +160,10 @@ canvas {
 	  justify-content: center;
 }
 
+#lang {
+	float: right;
+}
+
 #repos {
 	float: left;
 }
@@ -169,9 +174,21 @@ canvas {
 }
 
 #lheader {
-	padding-top: 3em;
-	float: left;
-	width: 5em;
+	float: right;
+}
+
+#llegend ul{
+	-webkit-column-count: 4;
+	-moz-column-count: 4;
+	column-count: 4;
+	text-align: left;
+}
+
+#lang, 
+#repo,
+#orgz {
+	width: 100%;
+	margin-bottom: 2em;
 }
 
 /* ----------------------- */
