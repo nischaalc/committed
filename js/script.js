@@ -22,6 +22,7 @@ $('#username').keyup(function (e) {
 		$('#messages').empty();
         $('#repos').empty();
 		$('#llegend').empty();
+		$('#org-images').empty();
 		$('#data').hide(); //Hide sections to prevent FOUC... does not prevent FOUC :(
 		$('#API').hide();
 		$('#repo').hide();
@@ -46,10 +47,7 @@ $('#username').keyup(function (e) {
 function getData(userName) {
 	$.get(base + userName, function (userData) {
 		uData = userData;
-		$('#search').fadeOut(750, function () {
-			$('#data').fadeIn(500);
-			$('#footer').fadeOut();
-		});
+
 		//Check that the user has a defined full name or use their username if they don't
 		uName = userName;
 		var	uBlog = uData.blog, uCompany = uData.company, uLocation = uData.location;
@@ -113,81 +111,88 @@ function getData(userName) {
 				}
 				
 				for (var i = 0; i < orgs.length; i++) {
-					$('#orgz').append('<a href="'+(htmlBase+orgs[i].info.login)+'" target=_blank><img src = "'+orgs[i].info.avatar_url+'"/></a>');
+					$('#org-images').append('<a href="'+(htmlBase+orgs[i].info.login)+'" target=_blank><img src = "'+orgs[i].info.avatar_url+'"/><div class = "caption">'+orgs[i].info.login+'</div></a>');
 				}
-			}
-		}).done(function() {
-			$('#orgz').fadeIn(500)
-		});
-	}).fail(function() {
-		unrecognized();
-	});
-
-	//Get users' repo data using GitHub API
-	var repos = [],
-		uLang = [],
-		langList = [], 
-		repoInf,
-		finished = false,
-		page = 1;
-
-	var ctx = document.getElementById("lang-chart").getContext("2d");
-	var data = [];
-	langChart = new Chart(ctx).Doughnut(data, {animateScale: true,animationEasing : "easeOutExpo",segmentStrokeWidth : 2});
-	getRepos(page);
-	
-	function getRepos(pageNum) {
-		$.get(base+userName+'/repos?&page='+pageNum, function (repoData) {
-		rData = repoData;
-			if (repoData.length !== 0) {
-				$.each(repoData, function(i, repoInf) {
-					repos.push({info:repoInf});
-				});
 				
-				repos.sort(sortByStars);
+			}
+		});
 
-				for (var i = 0; i < repos.length; i++) {
-					if (repos[i].info.language) {
-						if (langList.indexOf(repos[i].info.language) === -1) {
-							uLang.push({val:1, label:repos[i].info.language, percentage:'', color:''});
-							langList[langList.length] = repos[i].info.language;
-						} else {
-							uLang[langList.indexOf(repos[i].info.language)].val++;
+		//Get users' repo data using GitHub API
+		var repos = [],
+			uLang = [],
+			langList = [], 
+			repoInf,
+			finished = false,
+			page = 1;
+
+		var ctx = document.getElementById("lang-chart").getContext("2d");
+		var data = [];
+		langChart = new Chart(ctx).Doughnut(data, {animateScale: true,animationEasing : "easeOutExpo",segmentStrokeWidth : 2});
+		getRepos(page);
+		
+		function getRepos(pageNum) {
+			$.get(base+userName+'/repos?&page='+pageNum, function (repoData) {
+			rData = repoData;
+				if (repoData.length !== 0) {
+					$.each(repoData, function(i, repoInf) {
+						repos.push({info:repoInf});
+					});
+					
+					repos.sort(sortByStars);
+
+					for (var i = 0; i < repos.length; i++) {
+						if (repos[i].info.language) {
+							if (langList.indexOf(repos[i].info.language) === -1) {
+								uLang.push({val:1, label:repos[i].info.language, percentage:'', color:''});
+								langList[langList.length] = repos[i].info.language;
+							} else {
+								uLang[langList.indexOf(repos[i].info.language)].val++;
+							}
 						}
 					}
+				} else {
+					finished = true;
+				}			
+			}).done(function() {
+				if (finished === true) {
+					getPerc(uLang);
+					$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th><th>Description</th></tr></thead><tbody><tr><td><a href = "'+repos[0].info.html_url+'" target = _blank>'+repos[0].info.name+hasHome(repos,0)+'</a></td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td><td>'+repos[0].info.description+'</td></tr><tr><td><a href = "'+repos[1].info.html_url+'" target = _blank>'+repos[1].info.name+hasHome(repos,1)+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td><td>'+repos[1].info.description+'</td></tr><tr><td><a href = "'+repos[2].info.html_url+'" target = _blank>'+repos[2].info.name+hasHome(repos,2)+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td><td>'+repos[2].info.description+'</td></tr><tr><td><a href = "'+repos[3].info.html_url+'" target = _blank>'+repos[3].info.name+hasHome(repos,3)+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td><td>'+repos[3].info.description+'</td></tr><tr><td><a href = "'+repos[4].info.html_url+'" target = _blank>'+repos[4].info.name+hasHome(repos,4)+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td><td>'+repos[4].info.description+'</td></tr></tbody></table>'); 
+					var currentColor;
+					for (var i = 0; i < uLang.length; i++) {
+					currentColor = randomColor();
+					uLang[i].color = currentColor;
+						langChart.addData({
+							value: uLang[i].val,
+							color: currentColor,
+							label: uLang[i].label
+						});
+					}
+					var listString = '<ul>';
+					for (var i = 0; i < uLang.length; i++) {
+						listString += '<li style = "color:'+uLang[i].color+';"><b>'+uLang[i].label + ': ' + uLang[i].percentage + '</b><li>';
+					}
+					
+					listString += '</ul>';
+					$('#llegend').append(listString);
+				} else {
+					page++
+					getRepos(page);
 				}
-			} else {
-				finished = true;
-			}			
-		}).done(function() {
-			if (finished === true) {
-				getPerc(uLang);
-				$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th><th>Description</th></tr></thead><tbody><tr><td><a href = "'+repos[0].info.html_url+'" target = _blank>'+repos[0].info.name+hasHome(repos,0)+'</a></td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td><td>'+repos[0].info.description+'</td></tr><tr><td><a href = "'+repos[1].info.html_url+'" target = _blank>'+repos[1].info.name+hasHome(repos,1)+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td><td>'+repos[1].info.description+'</td></tr><tr><td><a href = "'+repos[2].info.html_url+'" target = _blank>'+repos[2].info.name+hasHome(repos,2)+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td><td>'+repos[2].info.description+'</td></tr><tr><td><a href = "'+repos[3].info.html_url+'" target = _blank>'+repos[3].info.name+hasHome(repos,3)+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td><td>'+repos[3].info.description+'</td></tr><tr><td><a href = "'+repos[4].info.html_url+'" target = _blank>'+repos[4].info.name+hasHome(repos,4)+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td><td>'+repos[4].info.description+'</td></tr></tbody></table>'); 
-				var currentColor;
-				for (var i = 0; i < uLang.length; i++) {
-				currentColor = randomColor();
-				uLang[i].color = currentColor;
-					langChart.addData({
-						value: uLang[i].val,
-						color: currentColor,
-						label: uLang[i].label
-					});
-				}
-				var listString = '<ul>';
-				for (var i = 0; i < uLang.length; i++) {
-					listString += '<li style = "color:'+uLang[i].color+';"><b>'+uLang[i].label + ': ' + uLang[i].percentage + '</b><li>';
-				}
-				
-				listString += '</ul>';
-				$('#llegend').append(listString);
-				$('#repo').fadeIn(800);
-				$('#lang').fadeIn(800);
-			} else {
-				page++
-				getRepos(page);
-			}
+			});
+		}
+	}).done (function() {
+		$('#search').fadeOut(750, function () {
+			$('#data').fadeIn(500);
+			$('#repo').fadeIn(500);
+			$('#lang').fadeIn(500);
+			$('#orgz').fadeIn(500);
+			$('#footer').fadeOut();
 		});
-	}
+	})
+	.fail(function() {
+		unrecognized();
+	});
+			
 }
 
 // Check if a repo has an external homepage
@@ -267,12 +272,11 @@ function unrecognized() {
 // Take user back to search screen
 $( '#go-back' ).click(function() {
 		$('#data').fadeOut(500, function () {
-			$('#search').fadeIn(500);
-			$('#API').fadeIn(500);
 			$('.spinner').hide();
 			$('#username').focus();
 			langChart.destroy();
-			$('#header').empty();
+			$('#search').fadeIn(500);
+			$('#API').fadeIn(500);
 		});
 	$('#home').show();
 	document.title = 'Committed';
