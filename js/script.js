@@ -4,7 +4,8 @@ var base = 'https://api.github.com/users/',
 	googleBase = 'https://www.google.com/#q=',
 	rData = {},
 	uData = {},
-	langChart, uName;
+	eData = {},
+	langChart, eventChart, uName;
 
 // Run on load
 $(document).ready(function() {
@@ -16,14 +17,15 @@ $(document).ready(function() {
 //Detect 'Enter' key being pressed
 $('#username').keyup(function (e) {
 	if (e.keyCode === 13) {
-		$('#content').empty(); //Empty sections to prevent data overflow
+		$('#content').empty(); //Empty containers to prevent data overflow
 		$('#orgz').empty();
 		$('#top-bar').empty();
 		$('#messages').empty();
         $('#repos').empty();
 		$('#llegend').empty();
 		$('#org-images').empty();
-		$('#data').hide(); //Hide sections to prevent FOUC... does not prevent FOUC :(
+		$('#eheader').empty();
+		$('#data').hide(); //Hide containers to prevent FOUC... does not prevent FOUC :(
 		$('#API').hide();
 		$('#rep-cont').hide();
 		$('#lang-cont').hide();
@@ -46,6 +48,7 @@ $('#username').keyup(function (e) {
 //Get user data using GitHub API
 function getData(userName) {
 	$.get(base + userName, function (userData) {
+		;
 		uData = userData;
 
 		//Check that the user has a defined full name or use their username if they don't
@@ -91,57 +94,31 @@ function getData(userName) {
 			$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' currently works at </span><span class = "stat"><a href = "'+(googleBase+uCompany)+'" target = _blank>'+uCompany+'</a></span>');
 			$('#content').append('<span class = "desc"> and lives in </span><span class = "stat"><a href = "'+(googleBase+uLocation)+'" target = _blank>'+uLocation+'</a></span><span class = "desc">.</span>');
 		}
-		//Get users' organization info
-		var orgCount = 0;
-		var oData = {};
-		var orgs = [];
-		$.get(base + userName+'/orgs', function (orgData) {
-			oData = orgData;
-			$.each(oData, function(i, orgInf) {
-				orgCount++;
-				orgs.push({info:orgInf});
-			});
-			if (orgCount === 0) {
-				$('#orgz').append('<span class = "desc">Alas!</br>'+((uName).split(/[^A-Za-z]/))[0]+' is not a member of any organizations.</br>Check back soon and they may be a part of a couple.</span>');
-				$('#org-images').append('<a href = "https://youtube.com/watch?v=hbn6o5tiPds" target = _blank><img src = "images/lonely.png" /></a>');
-			} else {
-				$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is also a member of </span><span class = "stat"><a href = "'+(htmlBase+orgs[0].info.login)+'" target = _blank>'+orgs[0].info.login+'</a></span>');
-				
-				if ((orgCount - 1) === 1) {
-					$('#orgz').append('<span class = "desc"> and </span><span class = "stat"> <a href = "'+(htmlBase+orgs[1].info.login)+'" target = _blank>'+orgs[1].info.login+'</span>.</br>');
-				} else if ((orgCount - 1) === 0) {
-					$('#orgz').append('.</br>');
-				} else { 
-					$('#orgz').append('<span class = "desc"> and </span><span class = "desc"> '+(orgCount - 1)+' other organizations.</span></br>');
-				}
-				for (var i = 0; i < orgs.length; i++) {
-						$('#org-images').append('<a href="'+(htmlBase+orgs[i].info.login)+'" target=_blank><img src = "'+orgs[i].info.avatar_url+'"/><div class = "caption">'+orgs[i].info.login+'</div></a>');
-				}	
-			}
-		});
 
-		//Get users' repo data using GitHub API
+		//Get users' repo data
 		var repos = [],
 			uLang = [],
 			langList = [], 
 			repoInf,
 			finished = false,
-			page = 1;
+			rpage = 1,
+			epage = 1;
 
 		var ctx = document.getElementById("lang-chart").getContext("2d");
 		var data = [];
 		langChart = new Chart(ctx).Doughnut(data, {animateScale: true,animationEasing : "easeOutExpo",segmentStrokeWidth : 2});
-		getRepos(page);
+		getRepos(rpage);
 		
 		function getRepos(pageNum) {
 			$.get(base+userName+'/repos?&page='+pageNum, function (repoData) {
-			rData = repoData;
+			;
+				rData = repoData;
 				if (repoData.length !== 0) {
 					$.each(repoData, function(i, repoInf) {
 						repos.push({info:repoInf});
 					});
 					
-					repos.sort(sortByStars);
+					repos.sort(sortByPop);
 
 					for (var i = 0; i < repos.length; i++) {
 						if (repos[i].info.language) {
@@ -159,6 +136,7 @@ function getData(userName) {
 			}).done(function() {
 				if (finished === true) {
 					getPerc(uLang);
+					$('#lheader').append('Their '+langList.length+' most used languages are');
 					$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th><th>Description</th></tr></thead><tbody><tr><td><a href = "'+repos[0].info.html_url+'" target = _blank>'+repos[0].info.name+hasHome(repos,0)+'</a></td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td><td>'+repos[0].info.description+'</td></tr><tr><td><a href = "'+repos[1].info.html_url+'" target = _blank>'+repos[1].info.name+hasHome(repos,1)+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td><td>'+repos[1].info.description+'</td></tr><tr><td><a href = "'+repos[2].info.html_url+'" target = _blank>'+repos[2].info.name+hasHome(repos,2)+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td><td>'+repos[2].info.description+'</td></tr><tr><td><a href = "'+repos[3].info.html_url+'" target = _blank>'+repos[3].info.name+hasHome(repos,3)+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td><td>'+repos[3].info.description+'</td></tr><tr><td><a href = "'+repos[4].info.html_url+'" target = _blank>'+repos[4].info.name+hasHome(repos,4)+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td><td>'+repos[4].info.description+'</td></tr></tbody></table>'); 
 					var currentColor;
 					for (var i = 0; i < uLang.length; i++) {
@@ -177,18 +155,119 @@ function getData(userName) {
 					
 					listString += '</ul>';
 					$('#llegend').append(listString);
+					$('#rep-cont').fadeIn(500);
+					$('#lang-cont').fadeIn(500);
+					getOrgs();
 				} else {
-					page++
-					getRepos(page);
+					rpage++
+					getRepos(rpage);
 				}
 			});
+		}
+		
+		//Get users' organization info
+		function getOrgs() {
+			var orgCount = 0;
+			var oData = {};
+			var orgs = [];
+			$.get(base + userName+'/orgs', function (orgData) {
+				;
+				oData = orgData;
+				$.each(oData, function(i, orgInf) {
+					orgCount++;
+					orgs.push({info:orgInf});
+				});
+				if (orgCount === 0) {
+					$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is not a member of any public organizations.</br>This could either mean that they aren\'t part of any organizations... or they\'re in secret ones!</span>');
+					$('#org-images').append('<a href = "http://en.wikipedia.org/wiki/Secret_society" target = _blank><img src = "images/nopubrep.png" /></a>');
+				} else {
+					if (orgCount === 1) {
+						$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is a member of </span><span class = "stat"><a href = "'+orgs[0].info.url+'" target = _blank>'+orgs[0].info.login+'</a></span><span class = "desc">.</span>');
+					} else {
+						$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is a member of '+orgCount+' public organizations.</span>');
+					}
+					
+					for (var i = 0; i < orgs.length; i++) {
+							$('#org-images').append('<a href="'+(htmlBase+orgs[i].info.login)+'" target=_blank><img src = "'+orgs[i].info.avatar_url+'"/><div class = "caption">'+orgs[i].info.login+'</div></a>');
+					}	
+				}
+			}).done(function() {
+				getEvents(epage);
+				$('#org-cont').fadeIn(500);
+			});
+		}
+		
+		var createCount = 0, forkCount = 0, issueCount = 0, pullCount = 0, commitCount = 0, totalEvents = 0, firstDate, secondDate;
+		
+		//Get users recent activity
+		function getEvents(pageNum) {
+			var	events = [],
+				completed = false,
+				eventType;
+
+			$.get(base+userName+'/events?&page='+pageNum, function (eventData) {
+				if (pageNum === 5) completed = true;
+				eData = eventData;
+				if (eData.length !== 0) {
+					$.each(eventData, function(i, eventInf) {
+						events.push({info:eventInf});
+					});
+					
+					if (pageNum === 1) firstDate = ((events[0].info.created_at).substr(0,10)).replace(/-/g,'/');
+					
+					for (var i = 0; i < events.length;i++) {
+						eventType = events[i].info.type;
+						secondDate = ((events[i].info.created_at).substr(0,10)).replace(/-/g,'/');
+						
+						switch(eventType) {
+							case 'CreateEvent':
+								createCount++;
+								break;
+							case 'ForkEvent':
+								forkCount++;
+								break;
+							case 'IssuesEvent':
+								issueCount++;
+								break;
+							case 'PullRequestEvent':
+								pullCount++;
+								break;
+							case 'PushEvent':
+								commitCount++;
+								break;
+						}
+					}
+				} else {
+					completed = true;
+				}
+			}).done(function() {
+				if (completed === true) {
+					var cty = document.getElementById("event-chart").getContext("2d");
+					var eData = {
+						labels: ["Creations", "Forks", "Issues", "Pulls", "Commits"],
+						datasets: [
+							{
+								label: "Event Data",
+								fillColor: randomColor(),
+								data: [createCount, forkCount, issueCount, pullCount, commitCount]
+							}
+						]
+					};
+					console.log(firstDate + ' ' + secondDate);
+					totalEvents = createCount + forkCount + issueCount + pullCount + commitCount;
+					eventChart = new Chart(cty).Bar(eData, {barShowStroke : true});	
+					$('#eheader').append('Between '+firstDate+ ' and '+secondDate+' there have been '+totalEvents+' events recorded for '+((uName).split(/[^A-Za-z]/))[0]+'.');
+					$('#eheader').append('<ul><li><i style = "margin-right:0.3em;">Creations</i>  represent when the user creates a repository, branch, or tag.</li><li><i style = "margin-right:0.3em;">Forks</i>  represent when the user forks a repository.</li><li><i style = "margin-right:0.3em;">Issues</i>  represent when the user triggers an issue or makes an impact on its\' state.</li><li><i style = "margin-right:0.3em;">Pulls</i>  represent when the user triggers a pull request or makes an impact on it\'s state.</li><li><i style = "margin-right:0.3em;">Commits</i>  represent when the user pushes to a repo they own or contribute to.</li></ul>');
+					$('#event-cont').fadeIn(500);
+				} else {
+					epage++;
+					getEvents(epage);
+				}
+			});	
 		}
 	}).done(function() {
 		$('#search').fadeOut(750, function () {
 			$('#data').fadeIn(800);
-			$('#rep-cont').fadeIn(500);
-			$('#lang-cont').fadeIn(500);
-			$('#org-cont').fadeIn(500);
 			$('#footer').fadeOut();
 		});
 	})
@@ -222,9 +301,9 @@ function getPerc(uLang) {
 	}
 }
 
-//Sort repos by stars
-function sortByStars(a, b) {
-		return b.info.stargazers_count - a.info.stargazers_count;
+//Sort repos by stars + forks
+function sortByPop(a, b) {
+		return ((b.info.stargazers_count + b.info.forks_count) - (a.info.stargazers_count + a.info.forks_count));
 }
 
 //Help message
@@ -251,7 +330,7 @@ function showInfo() {
     }, 9000);
 }
 
-//Oops
+//Tell the user that they aren't literally meant to enter 'username'
 function showOops() {
 	var oops = '# Ah! Hello! I see that I didn\'t make myself understandable enough - sorry about that.</br># What I meant was to enter the username of the user that you are trying to find information about.</br># Now go get \'em!';
 	$('#messages').append('<p class = "oops">'+oops+'</p>');
@@ -262,6 +341,7 @@ function showOops() {
         });
     }, 9000);
 }
+
 //Error message if user not found
 function unrecognized() {
 	var error = '# Ah shucks... I couldn\'t find that user... Would you give me another chance?';
@@ -280,6 +360,7 @@ $( '#go-back' ).click(function() {
 		$('#data').fadeOut(500, function () {
 			$('.spinner').hide();
 			langChart.destroy();
+			eventChart.destroy();
 			$('#search').fadeIn(500);
 			$('#API').fadeIn(500);
 			$('#username').focus();
@@ -287,6 +368,7 @@ $( '#go-back' ).click(function() {
 	document.title = 'Committed';
 });
 
+//Ensure that the user doesn't lose the input box :D
 $('#username').focusout(function() {
 	$('#username').focus();
 });
