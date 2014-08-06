@@ -102,10 +102,10 @@ canvas {
 }
 
 #rheader,
-#lheader {
+#lheader,
+#eheader {
 	font-size: 1.5em;
 	color: #76C8E3;
-	margin-left: -1em;
 }
 
 /* ----------------------- */
@@ -160,7 +160,8 @@ canvas {
 	  justify-content: center;
 }
 
-#org-cont {
+#org-cont,
+#event-cont {
 	display: -webkit-box;
 	display: -moz-box;
 	display: -ms-flexbox;
@@ -180,11 +181,17 @@ canvas {
 
 #rheader {
 	float: left;
-	padding-right: 1em;
+	margin-right: 1em;
 }
 
 #lheader {
 	float: right;
+}
+
+#eheader {
+	float: left;
+	margin-right: 1em;
+	width: 50%;
 }
 
 #llegend ul{
@@ -194,9 +201,15 @@ canvas {
 	text-align: center;
 }
 
+#eheader ul {
+	text-align: left;
+	font-size: 0.7em;
+}
+
 #lang-cont, 
 #rep-cont,
-#org-cont {
+#org-cont,
+#event-cont {
 	margin-bottom: 2em;
 	width: 100%;
 }
@@ -216,6 +229,14 @@ canvas {
     display:inline-block;
     text-decoration:none;
     color:#1595BF;
+	margin-bottom: 0.5em;
+}
+
+#event-chart {
+	float: right;
+	margin-right: 5em;
+	margin-bottom: 1em;
+	width: 50%;
 }
  
 /* ----------------------- */
@@ -229,7 +250,6 @@ canvas {
 	height: 3em;
 	width: 3em;
 	margin-top: 0.5em;
-	margin-right: 0.6em;
 	border-radius: 50%;
 }
 
@@ -268,6 +288,14 @@ canvas {
 .desc {
 	font-size: 2em;
 	color: #76C8E3;
+}
+
+#orgz .desc {
+	font-size: 1.5em;
+}
+
+.caption {
+	margin-top: 0.5em;
 }
 
 /* ----------------------- */
