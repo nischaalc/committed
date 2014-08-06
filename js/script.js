@@ -25,7 +25,8 @@ $('#username').keyup(function (e) {
 		$('#llegend').empty();
 		$('#org-images').empty();
 		$('#eheader').empty();
-		$('#data').hide(); //Hide containers to prevent FOUC... does not prevent FOUC :(
+		$('#lheader').empty();
+		$('#data').hide(); //Hide containers to prevent FOUC
 		$('#API').hide();
 		$('#rep-cont').hide();
 		$('#lang-cont').hide();
@@ -48,7 +49,6 @@ $('#username').keyup(function (e) {
 //Get user data using GitHub API
 function getData(userName) {
 	$.get(base + userName, function (userData) {
-		;
 		uData = userData;
 
 		//Check that the user has a defined full name or use their username if they don't
@@ -89,9 +89,9 @@ function getData(userName) {
 		$('#content').append('<span class = "stat" style = "padding-left: 0.3em;"><a href = "https://gist.github.com/'+userName+'" target = _blank>'+uData.public_gists+'</a></span><span class = "desc"> gists.</span></br>');
 		
 		if (uData.type === 'Organization') {
-			$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is an organization based in </span><span class = "stat"><a href = "'+(googleBase+uLocation)+'" target = _blank>'+uLocation+'</a></span><span class = "desc">.</span>');
+			$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z0-9]/))[0]+' is an organization based in </span><span class = "stat"><a href = "'+(googleBase+uLocation)+'" target = _blank>'+uLocation+'</a></span><span class = "desc">.</span>');
 		} else {
-			$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' currently works at </span><span class = "stat"><a href = "'+(googleBase+uCompany)+'" target = _blank>'+uCompany+'</a></span>');
+			$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z0-9]/))[0]+' currently works at </span><span class = "stat"><a href = "'+(googleBase+((uCompany).split(/[^A-Za-z0-9 ]/))[0])+'" target = _blank>'+((uCompany).split(/[^A-Za-z0-9 ]/))[0]+'</a></span>');
 			$('#content').append('<span class = "desc"> and lives in </span><span class = "stat"><a href = "'+(googleBase+uLocation)+'" target = _blank>'+uLocation+'</a></span><span class = "desc">.</span>');
 		}
 
@@ -111,7 +111,6 @@ function getData(userName) {
 		
 		function getRepos(pageNum) {
 			$.get(base+userName+'/repos?&page='+pageNum, function (repoData) {
-			;
 				rData = repoData;
 				if (repoData.length !== 0) {
 					$.each(repoData, function(i, repoInf) {
@@ -171,20 +170,19 @@ function getData(userName) {
 			var oData = {};
 			var orgs = [];
 			$.get(base + userName+'/orgs', function (orgData) {
-				;
 				oData = orgData;
 				$.each(oData, function(i, orgInf) {
 					orgCount++;
 					orgs.push({info:orgInf});
 				});
 				if (orgCount === 0) {
-					$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is not a member of any public organizations.</br>This could either mean that they aren\'t part of any organizations... or they\'re in secret ones!</span>');
+					$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z0-9]/))[0]+' is not a member of any public organizations.</br>This could either mean that they aren\'t part of any organizations... or they\'re in secret ones!</span>');
 					$('#org-images').append('<a href = "http://en.wikipedia.org/wiki/Secret_society" target = _blank><img src = "images/nopubrep.png" /></a>');
 				} else {
 					if (orgCount === 1) {
-						$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is a member of </span><span class = "stat"><a href = "'+orgs[0].info.url+'" target = _blank>'+orgs[0].info.login+'</a></span><span class = "desc">.</span>');
+						$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z0-9]/))[0]+' is a member of </span><span class = "stat"><a href = "'+orgs[0].info.url+'" target = _blank>'+orgs[0].info.login+'</a></span><span class = "desc">.</span>');
 					} else {
-						$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z]/))[0]+' is a member of '+orgCount+' public organizations.</span>');
+						$('#orgz').append('<span class = "desc">'+((uName).split(/[^A-Za-z0-9]/))[0]+' is a member of '+orgCount+' public organizations.</span>');
 					}
 					
 					for (var i = 0; i < orgs.length; i++) {
@@ -253,10 +251,10 @@ function getData(userName) {
 							}
 						]
 					};
-					console.log(firstDate + ' ' + secondDate);
+
 					totalEvents = createCount + forkCount + issueCount + pullCount + commitCount;
-					eventChart = new Chart(cty).Bar(eData, {barShowStroke : true});	
-					$('#eheader').append('Between '+firstDate+ ' and '+secondDate+' there have been '+totalEvents+' events recorded for '+((uName).split(/[^A-Za-z]/))[0]+'.');
+					eventChart = new Chart(cty).Bar(eData, {});	
+					$('#eheader').append('Between '+firstDate+ ' and '+secondDate+' there are '+totalEvents+' key events recorded for '+((uName).split(/[^A-Za-z]/))[0]+'.');
 					$('#eheader').append('<ul><li><i style = "margin-right:0.3em;">Creations</i>  represent when the user creates a repository, branch, or tag.</li><li><i style = "margin-right:0.3em;">Forks</i>  represent when the user forks a repository.</li><li><i style = "margin-right:0.3em;">Issues</i>  represent when the user triggers an issue or makes an impact on its\' state.</li><li><i style = "margin-right:0.3em;">Pulls</i>  represent when the user triggers a pull request or makes an impact on it\'s state.</li><li><i style = "margin-right:0.3em;">Commits</i>  represent when the user pushes to a repo they own or contribute to.</li></ul>');
 					$('#event-cont').fadeIn(500);
 				} else {
