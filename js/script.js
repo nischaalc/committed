@@ -92,7 +92,7 @@ function getData(userName) {
 			$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z0-9]/))[0]+' is an organization based in </span><span class = "stat"><a href = "'+(googleBase+uLocation)+'" target = _blank>'+uLocation+'</a></span><span class = "desc">.</span>');
 		} else {
 			$('#content').append('<span class = "desc">'+((uName).split(/[^A-Za-z0-9]/))[0]+' currently works at </span><span class = "stat"><a href = "'+(googleBase+((uCompany).split(/[^A-Za-z0-9 ]/))[0])+'" target = _blank>'+((uCompany).split(/[^A-Za-z0-9 ]/))[0]+'</a></span>');
-			$('#content').append('<span class = "desc"> and lives in </span><span class = "stat"><a href = "'+(googleBase+uLocation)+'" target = _blank>'+uLocation+'</a></span><span class = "desc">.</span>');
+			$('#content').append('<span class = "desc"> and lives in </span><span class = "stat"><a href = "'+(googleBase+((uLocation).split(/[^A-Za-z0-9, ]/))[0])+'" target = _blank>'+((uLocation).split(/[^A-Za-z0-9, ]/))[0]+'</a></span><span class = "desc">.</span>');
 		}
 
 		//Get users' repo data
@@ -135,7 +135,7 @@ function getData(userName) {
 			}).done(function() {
 				if (finished === true) {
 					getPerc(uLang);
-					$('#lheader').append('Their '+langList.length+' most used languages are');
+					$('#lheader').append('Their '+langList.length+' most used languages');
 					$('#repos').append('<table><thead><tr><th>Repo Name</th><th>Stars</th><th>Forks</th><th>Description</th></tr></thead><tbody><tr><td><a href = "'+repos[0].info.html_url+'" target = _blank>'+repos[0].info.name+hasHome(repos,0)+'</a></td><td style="text-align:center;">'+repos[0].info.stargazers_count+'</td><td style="text-align:center;">'+repos[0].info.forks_count+'</td><td>'+repos[0].info.description+'</td></tr><tr><td><a href = "'+repos[1].info.html_url+'" target = _blank>'+repos[1].info.name+hasHome(repos,1)+'</td><td style="text-align:center;">'+repos[1].info.stargazers_count+'</td><td style="text-align:center;">'+repos[1].info.forks_count+'</td><td>'+repos[1].info.description+'</td></tr><tr><td><a href = "'+repos[2].info.html_url+'" target = _blank>'+repos[2].info.name+hasHome(repos,2)+'</td><td style="text-align:center;">'+repos[2].info.stargazers_count+'</td><td style="text-align:center;">'+repos[2].info.forks_count+'</td><td>'+repos[2].info.description+'</td></tr><tr><td><a href = "'+repos[3].info.html_url+'" target = _blank>'+repos[3].info.name+hasHome(repos,3)+'</td><td style="text-align:center;">'+repos[3].info.stargazers_count+'</td><td style="text-align:center;">'+repos[3].info.forks_count+'</td><td>'+repos[3].info.description+'</td></tr><tr><td><a href = "'+repos[4].info.html_url+'" target = _blank>'+repos[4].info.name+hasHome(repos,4)+'</td><td style="text-align:center;">'+repos[4].info.stargazers_count+'</td><td style="text-align:center;">'+repos[4].info.forks_count+'</td><td>'+repos[4].info.description+'</td></tr></tbody></table>'); 
 					var currentColor;
 					for (var i = 0; i < uLang.length; i++) {
@@ -255,7 +255,7 @@ function getData(userName) {
 					totalEvents = createCount + forkCount + issueCount + pullCount + commitCount;
 					eventChart = new Chart(cty).Bar(eData, {});	
 					$('#eheader').append('Between '+firstDate+ ' and '+secondDate+' there are '+totalEvents+' key events recorded for '+((uName).split(/[^A-Za-z]/))[0]+'.');
-					$('#eheader').append('<ul><li><i style = "margin-right:0.3em;">Creations</i>  represent when the user creates a repository, branch, or tag.</li><li><i style = "margin-right:0.3em;">Forks</i>  represent when the user forks a repository.</li><li><i style = "margin-right:0.3em;">Issues</i>  represent when the user triggers an issue or makes an impact on its\' state.</li><li><i style = "margin-right:0.3em;">Pulls</i>  represent when the user triggers a pull request or makes an impact on it\'s state.</li><li><i style = "margin-right:0.3em;">Commits</i>  represent when the user pushes to a repo they own or contribute to.</li></ul>');
+					$('#eheader').append('<ul><li><i style = "margin-right:0.3em;">Creations</i>  represent when the user creates a repository, branch, or tag.</li><li><i style = "margin-right:0.3em;">Forks</i>  represent when the user forks a repo, or one of their repo\'s is forked.</li><li><i style = "margin-right:0.3em;">Issues</i>  represent when the user triggers an issue or makes an impact on its\' state.</li><li><i style = "margin-right:0.3em;">Pulls</i>  represent when the user triggers a pull request or makes an impact on it\'s state.</li><li><i style = "margin-right:0.3em;">Commits</i>  represent when the user pushes to a repo they own or contribute to.</li></ul>');
 					$('#event-cont').fadeIn(500);
 				} else {
 					epage++;
