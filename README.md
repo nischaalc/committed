@@ -5,6 +5,6 @@ Utilizing GitHub API's, *Committed* brings you a comprehensive summary of a GitH
 
 Feel free to fork the repo if you want to contribute!
 
-**I know that [GitHub Résumé](http://resume.github.io/) pretty much does this already. *Committed* will be a more visually dense representation of the information.**
+**I know that [GitHub Résumé](http://resume.github.io/) pretty much does this already. *Committed* is a more visual representation of the information.**
 
 **Default branch is `gh-pages` --- `master` will no longer be updated.**
